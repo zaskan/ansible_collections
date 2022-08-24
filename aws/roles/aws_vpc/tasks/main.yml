@@ -1,0 +1,107 @@
+---
+# tasks file for aws_vpc
+  - name: Create VPC
+    amazon.aws.ec2_vpc_net:
+      name: "{{ bucket }}-vpc"
+      cidr_block: 10.10.0.0/16
+      region: "{{ region }}"
+      tags:
+        purpose: "{{ bucket }}"
+      tenancy: default
+    register: vpc
+    run_once: true
+
+  - name: Create Internet gateway
+    amazon.aws.ec2_vpc_igw:
+      vpc_id: "{{ vpc.vpc.id }}"
+      region: "{{ region }}"
+      state: present
+      tags:
+        purpose: "{{ bucket }}"
+    register: igw
+    run_once: true
+
+  - name: Create local subnet
+    amazon.aws.ec2_vpc_subnet:
+      region: "{{ region }}"
+      state: present
+      vpc_id: "{{ vpc.vpc.id }}"
+      cidr: 10.10.1.0/24
+      tags:
+        purpose: "{{ bucket }}"
+    register: localsubnet
+    run_once: true
+
+  - name: Create public subnet
+    amazon.aws.ec2_vpc_subnet:
+      region: "{{ region }}"
+      state: present
+      vpc_id: "{{ vpc.vpc.id }}"
+      cidr: 10.10.2.0/24
+      tags:
+        purpose: "{{ bucket }}"
+    register: publicsubnet
+    run_once: true
+
+  - name: Create security group
+    amazon.aws.ec2_group:
+      region: "{{ region }}"
+      name: "{{ bucket }}-sg"
+      description: an example EC2 group
+      vpc_id: "{{ vpc.vpc.id }}"
+      rules:
+        - proto: tcp
+          from_port: 80
+          to_port: 80
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 443
+          to_port: 443
+          cidr_ip: 0.0.0.0/0
+        - proto: tcp
+          from_port: 22
+          to_port: 22
+          cidr_ip: 0.0.0.0/0
+      tags:
+        purpose: "{{ bucket }}"
+    register: sg
+    run_once: true
+
+  - name: Allocate a new elastic IP
+    community.aws.ec2_eip:
+      state: present
+      tag_name: purpose
+      tag_value: "{{ bucket }}"
+      tags:
+        purpose: "{{ bucket }}"
+      reuse_existing_ip_allowed: true
+      in_vpc: true
+      region: "{{ region }}"
+    register: eip
+
+  - name: Create nat gateway
+    amazon.aws.ec2_vpc_nat_gateway:
+      state: present
+      subnet_id: "{{ publicsubnet.subnet.id }}"
+      eip_address: "{{ eip.public_ip }}"
+      if_exist_do_not_create: yes
+      wait: true
+      region: "{{ region }}"
+      tags:
+        purpose: "{{ bucket }}"
+    register: nat
+    run_once: true
+
+  - name: Create route table for public interface and point to internet gateway
+    amazon.aws.ec2_vpc_route_table:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      subnets:
+        - "{{ publicsubnet.subnet.id }}"
+      routes:
+        - dest: 0.0.0.0/0
+          gateway_id: "{{ igw.gateway_id }}"
+      tags:
+        purpose: "{{ bucket }}"
+    register: gateway_route_table
+    run_once: true

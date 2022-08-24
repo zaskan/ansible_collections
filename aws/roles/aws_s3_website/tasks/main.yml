@@ -1,5 +1,5 @@
   - name: Create bucket
-    amazon.aws.aws_s3:
+    amazon.aws.s3_object:
       region: "{{ region }}"
       bucket: "{{ bucket }}"
       mode: create
@@ -15,26 +15,66 @@
       region: "{{ region }}"
       policy: "{{ lookup('file','policy.json') }}"
 
+  - name: Create temporal directory
+    ansible.builtin.file:
+      path: tmp
+      state: directory
+    delegate_to: localhost
+
+  - name: Download code from repository
+    ansible.builtin.git:
+      repo: "{{ repository }}" 
+      dest: tmp
+
+  - name: Get file names
+    ansible.builtin.find:
+      paths: tmp
+      recurse: yes
+    register: files
+
   - name: Upload website files
-    amazon.aws.aws_s3:
+    amazon.aws.s3_object:
       region: "{{ region }}"
       bucket: "{{ bucket }}"
+      object: "{{ item.path | relpath('tmp') }}"
+      src: "{{ item.path }}"
       mode: put
-      object: "index.html"
-      src: "index.html"
-    register: putresult
+    when: item.path is not search("git")
+    loop: "{{ files.files }}"
 
   - name: Activate website access
     community.aws.s3_website:
       region: "{{ region }}"
       name: "{{ bucket }}"
       state: present
+    register: url
 
-  - name: Clean
+  - name: Clean template
     ansible.builtin.file:
       path: policy.json
       state: absent
 
-  - name: Show site information
-    ansible.builtin.debug: 
-      msg: "Site deployed on {{ putresult.url.split('index.html')[0] }}index.html"
+  - name: Clean tmp
+    ansible.builtin.file:
+      path: tmp
+      state: absent
+
+  - name: Get site information
+    amazon.aws.s3_object:
+      region: "{{ region }}"
+      bucket: "{{ bucket }}"
+      object: "index.html"
+      mode: geturl 
+    register: url
+
+  - name: Show site URL
+    debug:
+      msg: "{{ url.url | urlsplit('scheme') }}://{{ url.url | urlsplit('hostname') }}{{ url.url | urlsplit('path') }}"
+    register: target_url
+
+  - name: Store URL
+    set_stats:
+      data:
+        target_url: "{{ target_url }}"
+
+
