@@ -1,0 +1,40 @@
+  - name: Create bucket
+    amazon.aws.aws_s3:
+      region: "{{ region }}"
+      bucket: "{{ bucket }}"
+      mode: create
+
+  - name: Create policy template
+    ansible.builtin.template:
+      src: policy.j2
+      dest: policy.json
+
+  - name: Upload policy
+    amazon.aws.s3_bucket:
+      name: "{{ bucket }}"
+      region: "{{ region }}"
+      policy: "{{ lookup('file','policy.json') }}"
+
+  - name: Upload website files
+    amazon.aws.aws_s3:
+      region: "{{ region }}"
+      bucket: "{{ bucket }}"
+      mode: put
+      object: "index.html"
+      src: "index.html"
+    register: putresult
+
+  - name: Activate website access
+    community.aws.s3_website:
+      region: "{{ region }}"
+      name: "{{ bucket }}"
+      state: present
+
+  - name: Clean
+    ansible.builtin.file:
+      path: policy.json
+      state: absent
+
+  - name: Show site information
+    ansible.builtin.debug: 
+      msg: "Site deployed on {{ putresult.url.split('index.html')[0] }}index.html"
