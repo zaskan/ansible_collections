@@ -1,31 +1,40 @@
-  - name: Create bucket for monitoring logs
-    amazon.aws.s3_object:
-      region: "{{ region }}"
-      bucket: "{{ bucket }}-canary"
-      mode: create
-      tags:
-        purpose: "{{ bucket }}"
+  - name: Create a new AAP token 
+    token:
+      description: '{{ bucket }}'
+      scope: "write"
+      state: present
+    register: aap_token
 
-  - name: Parse policy template
-    ansible.builtin.template:
-      src: canary.j2
-      dest: canary.json
-    run_once: true
+  - debug: msg="{{ aap_token }}"
 
-  - name: Delete previous monitoring stack via cloudformation
-    amazon.aws.cloudformation:
-      stack_name: "{{ bucket }}-canary-stack"
-      state: "absent"
-      region: "{{ region }}"
-    run_once: true
-
-  - name: Create Cloudwatch monitoring stack
-    amazon.aws.cloudformation:
-      stack_name: "{{ bucket }}-canary-stack"
-      state: "present"
-      region: "{{ region }}"
-      disable_rollback: false
-      template: "canary.json"
-      tags:
-        purpose: "{{ bucket }}"
-    run_once: true
+#  - name: Create bucket for monitoring logs
+#    amazon.aws.s3_object:
+#      region: "{{ region }}"
+#      bucket: "{{ bucket }}-canary"
+#      mode: create
+#      tags:
+#        purpose: "{{ bucket }}"
+#
+#  - name: Parse policy template
+#    ansible.builtin.template:
+#      src: canary.j2
+#      dest: canary.json
+#    run_once: true
+#
+#  - name: Delete previous monitoring stack via cloudformation
+#    amazon.aws.cloudformation:
+#      stack_name: "{{ bucket }}-canary-stack"
+#      state: "absent"
+#      region: "{{ region }}"
+#    run_once: true
+#
+#  - name: Create Cloudwatch monitoring stack
+#    amazon.aws.cloudformation:
+#      stack_name: "{{ bucket }}-canary-stack"
+#      state: "present"
+#      region: "{{ region }}"
+#      disable_rollback: false
+#      template: "canary.json"
+#      tags:
+#        purpose: "{{ bucket }}"
+#    run_once: true
