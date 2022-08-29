@@ -21,7 +21,7 @@
 
   - debug:
       msg: "{{ item }}"
-    with_items: "{{ token_json }}"
+    with_items: "{{ token_json.json }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
