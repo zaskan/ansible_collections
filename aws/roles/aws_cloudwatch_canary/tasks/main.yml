@@ -1,11 +1,3 @@
-  - name: Get variables
-    shell: export
-    register: output
-
-    
-  - debug:
-      msg: "{{ output }}"
-
   - name: Check for current tokens
     ansible.builtin.uri:
       url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
@@ -20,7 +12,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ token_json | community.general.json_query('json.description') }}"
+      msg: "{{ token_json | select('match', '(description') | list }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
