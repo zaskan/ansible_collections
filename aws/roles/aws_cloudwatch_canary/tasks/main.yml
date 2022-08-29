@@ -8,7 +8,7 @@
 
   - name: Check for current tokens
     ansible.builtin.uri:
-      url: "https://{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
+      url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
       method: POST
       force_basic_auth: yes
       body_format: json
