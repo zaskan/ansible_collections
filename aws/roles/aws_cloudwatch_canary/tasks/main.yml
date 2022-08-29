@@ -9,13 +9,13 @@
   - name: Check for current tokens
     ansible.builtin.uri:
       url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
-      method: POST
+      method: GET
       force_basic_auth: yes
       body_format: json
       url_username: "{{ lookup('ansible.builtin.env', 'CONTROLLER_USERNAME') }}"
       url_password: "{{ lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD') }}"
       return_content: yes
-      status_code: 201
+      status_code: 200
       validate_certs: no
     register: token_json
 
