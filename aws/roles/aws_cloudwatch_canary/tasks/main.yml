@@ -20,7 +20,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ item.results }}"
+      msg: "{{ item }}"
     with_items: "{{ token_json.content }}"
 #    with_items: "{{ token_json.msg.content | community.general.json_query('description') }}"
 #
