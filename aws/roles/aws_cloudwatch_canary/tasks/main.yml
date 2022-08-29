@@ -1,11 +1,31 @@
-  - name: Create a new AAP token 
-    ansible.controller.token:
-      description: '{{ bucket }}'
-      scope: "write"
-      state: present
-    register: aap_token
+  - name: Get variables
+    shell: export
+    register: output
+    
+  - debug:
+      msg: "{{ output }}"
 
-  - debug: msg="{{ aap_token }}"
+#  - name: Check for current tokens
+#    ansible.builtin.uri:
+#      url: "https://{{ tower_hostname }}/api/v2/tokens/"
+#      method: POST
+#      force_basic_auth: yes
+#      body_format: json
+#      url_username: "{{ admin_username }}"
+#      url_password: "{{ admin_password }}"
+#      return_content: yes
+#      status_code: 201
+#      validate_certs: no
+#    register: token_json
+#
+#  - name: Create a new AAP token 
+#    ansible.controller.token:
+#      description: '{{ bucket }}'
+#      scope: "write"
+#      state: present
+#    register: aap_token
+#
+#  - debug: msg="{{ aap_token }}"
 
 #  - name: Create bucket for monitoring logs
 #    amazon.aws.s3_object:
