@@ -1,5 +1,5 @@
   - name: Create a new AAP token 
-    token:
+    ansible.controller.token:
       description: '{{ bucket }}'
       scope: "write"
       state: present
