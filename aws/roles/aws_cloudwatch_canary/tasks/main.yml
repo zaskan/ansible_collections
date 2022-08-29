@@ -8,12 +8,12 @@
 
   - name: Check for current tokens
     ansible.builtin.uri:
-      url: "https://{{ tower_hostname }}/api/v2/tokens/"
+      url: "https://{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
       method: POST
       force_basic_auth: yes
       body_format: json
-      url_username: "'{{ lookup('ansible.builtin.env', 'CONTROLLER_USERNAME') }}'"
-      url_password: "'{{ lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD') }}'"
+      url_username: "{{ lookup('ansible.builtin.env', 'CONTROLLER_USERNAME') }}"
+      url_password: "{{ lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD') }}"
       return_content: yes
       status_code: 201
       validate_certs: no
