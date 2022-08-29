@@ -21,7 +21,7 @@
 
   - debug:
       msg: "{{ item }}"
-    with_items: "{{ token_json.msg | community.general.json_query('description') }}"
+    with_items: "{{ token_json.results | community.general.json_query('description') }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
