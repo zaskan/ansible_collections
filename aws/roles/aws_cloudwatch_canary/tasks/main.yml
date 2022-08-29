@@ -20,8 +20,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ item }}"
-    with_items: "{{ token_json | community.general.json_query('description') }}"
+      msg: "{{ token_json | community.general.json_query('description') }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
