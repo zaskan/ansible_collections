@@ -13,7 +13,7 @@
 
   - debug:
       msg: "{{ item }}"
-    loop: "{{ token_json.content }}"
+    with_items: "{{ token_json.content }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
