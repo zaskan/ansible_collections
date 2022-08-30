@@ -12,7 +12,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ item }}"
+      msg: "{{ item.results }}"
     with_items: "{{ token_json.content }}"
 #
 #  - name: Create a new AAP token 
