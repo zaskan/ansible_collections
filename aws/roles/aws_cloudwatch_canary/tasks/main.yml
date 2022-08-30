@@ -13,7 +13,7 @@
 
   - debug:
       msg: "Found {{ bucket }}"
-    when: {{ bucket }} in token_json.content 
+    when: "{{ bucket }} in token_json.content "
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
