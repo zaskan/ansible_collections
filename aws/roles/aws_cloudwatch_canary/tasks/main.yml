@@ -12,7 +12,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ token_json }}"
+      msg: "{{ token_json.content }}"
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
