@@ -12,8 +12,8 @@
     register: token_json
 
   - debug:
-      msg: "{{ item.results }}"
-    with_items: "{{ token_json.content }}"
+      msg: "Found {{ bucket }}"
+    when: {{ bucket }} in token_json.content 
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
