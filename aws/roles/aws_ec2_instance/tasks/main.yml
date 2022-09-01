@@ -5,13 +5,11 @@
     amazon.aws.ec2_instance_info:
     register: instances
 
-
-
   - debug: msg="{{ instances }}"
 
   - debug: 
       msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
-    with_items: instances
+    with_items: instances.instances
     register: current
 
   - debug: msg="{{ current }}"
