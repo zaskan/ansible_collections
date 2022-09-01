@@ -9,7 +9,7 @@
 
   - debug: 
     #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
-      msg: "{{ vm }}"
+      msg: "{{ vm.tags }}"
     loop: "{{ instances | dict2items }}"
     loop_control:
       index_var: vm
