@@ -1,5 +1,12 @@
 ---
 # tasks file for aws_ec2_instance
+
+  - name: Gather information about all instances
+    amazon.aws.ec2_instance_info:
+    register: instances
+
+  - debug: msg="{{ instances }}"
+
   - name: Deploy ec2 instance
     amazon.aws.ec2_instance:
       key_name: "{{ key_name }}"
