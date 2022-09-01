@@ -5,10 +5,10 @@
     amazon.aws.ec2_instance_info:
       filters:
         "tag:Name": "{{ instance_name }}"
-        instance-state-name: running
-    register: instances
+        instance-state-name: ["running", "pending", "shutting-down", "stopping", "stopped"]
+    register: state
 
-  - debug: msg="{{ instances }}"
+  - debug: msg="{{ state.instances[0].tags.Name }}"
 
 #  - debug: 
 #    #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
