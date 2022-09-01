@@ -11,4 +11,6 @@
       vpc_subnet_id: "{{ vpc_subnet_id }}"
       network:
         assign_public_ip: "{{ assign_public_ip }}"
+      instance_tags:
+        Name: "{{ instance_name }}"
       count: 1
