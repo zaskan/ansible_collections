@@ -3,11 +3,12 @@
   - name: Deploy ec2 instance
     amazon.aws.ec2_instance:
       key_name: "{{ key_name }}"
-      group: "{{ security_group }}"
+      security_group: "{{ security_group }}"
       instance_type: "{{ instance_type }}"
-      image: "{{ image }}"
+      image_id: "{{ image_id }}"
       wait: true
       region: "{{ region }}"
       vpc_subnet_id: "{{ subnet }}"
-      assign_public_ip: yes
-      count: "{{ count }}"
+      network:
+        assign_public_ip: "{{ assign_subnet_id }}"
+      count: 1
