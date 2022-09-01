@@ -3,19 +3,21 @@
 
   - name: Gather information about all instances
     amazon.aws.ec2_instance_info:
+      filters:
+        "{{ item }}:running"
     register: instances
 
   - debug: msg="{{ instances }}"
 
-  - debug: 
-    #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
-      msg: "{{ vm | regex_search('tags')}}"
-    loop: "{{ instances.instances }}"
-    loop_control:
-      index_var: vm
-    register: current
-
-  - debug: msg="{{ current }}"
+#  - debug: 
+#    #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
+#      msg: "{{ vm | regex_search('tags')}}"
+#    loop: "{{ instances.instances }}"
+#    loop_control:
+#      index_var: vm
+#    register: current
+#
+#  - debug: msg="{{ current }}"
 
 #  - name: Deploy ec2 instance
 #    amazon.aws.ec2_instance:
