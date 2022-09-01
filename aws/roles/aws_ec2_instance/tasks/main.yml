@@ -8,6 +8,8 @@
         instance-state-name: ["running", "pending", "shutting-down", "stopping", "stopped"]
     register: state
 
+  - debug: msg="{{ state }}"
+
   - name: "Deploy instance {{ instance_name }}"
     amazon.aws.ec2_instance:
       key_name: "{{ key_name }}"
