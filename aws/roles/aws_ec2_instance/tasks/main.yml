@@ -4,7 +4,7 @@
   - name: Gather information about all instances
     amazon.aws.ec2_instance_info:
       filters:
-        "{{ item }}:running"
+        "tag:{{ item }}":running
     register: instances
 
   - debug: msg="{{ instances }}"
