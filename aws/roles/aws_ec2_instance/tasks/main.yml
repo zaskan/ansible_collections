@@ -1,13 +1,13 @@
 ---
 # tasks file for aws_ec2_instance
-  name: Deploy ec2 instance
-  amazon.aws.ec2:
-    key_name: "{{ keypair }}"
-    group: "{{ security_group }}"
-    instance_type: "{{ instance_type }}"
-    image: "{{ image }}"
-    wait: true
-    region: "{{ region }}"
-    vpc_subnet_id: "{{ subnet }}"
-    assign_public_ip: yes
-    count: "{{ count }}"
+  - name: Deploy ec2 instance
+    amazon.aws.ec2:
+      key_name: "{{ keypair }}"
+      group: "{{ security_group }}"
+      instance_type: "{{ instance_type }}"
+      image: "{{ image }}"
+      wait: true
+      region: "{{ region }}"
+      vpc_subnet_id: "{{ subnet }}"
+      assign_public_ip: yes
+      count: "{{ count }}"
