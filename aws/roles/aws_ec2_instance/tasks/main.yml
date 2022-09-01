@@ -23,4 +23,4 @@
         assign_public_ip: "{{ assign_public_ip }}"
       name: "{{ instance_name }}"
       count: 1
-    when: (state.instances | lenght > 0) and (state.instances[0].tags.Name | length == 0)
+    when: (state.instances | length > 0) and (state.instances[0].tags.Name | length == 0)
