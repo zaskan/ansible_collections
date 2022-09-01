@@ -6,7 +6,7 @@
     register: instances
 
   - debug: 
-      msg: "{{ item.tags.Name }}:{{ item.state.name }}"
+      msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
     with_items: instances
     register: current
 
