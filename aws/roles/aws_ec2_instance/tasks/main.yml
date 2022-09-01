@@ -10,7 +10,7 @@
   - debug: 
     #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
       msg: "{{ item }}"
-    with_items: instances.instances
+    with_items: "{{ instances }}"
     register: current
 
   - debug: msg="{{ current }}"
