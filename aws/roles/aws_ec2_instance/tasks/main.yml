@@ -8,7 +8,8 @@
   - debug: msg="{{ instances }}"
 
   - debug: 
-      msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
+    #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
+      msg: "{{ item }}"
     with_items: instances.instances
     register: current
 
