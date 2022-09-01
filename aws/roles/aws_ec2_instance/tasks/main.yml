@@ -1,5 +1,6 @@
 ---
 # tasks file for aws_ec2_instance
+  name: Deploy ec2 instance
   amazon.aws.ec2:
     key_name: "{{ keypair }}"
     group: "{{ security_group }}"
