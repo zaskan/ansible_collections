@@ -9,8 +9,10 @@
 
   - debug: 
     #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
-      msg: "{{ item }}"
-    with_items: "{{ instances }}"
+      msg: "{{ vm }}"
+    loop: "{{ instances }}"
+    loop_control:
+      index_var: vm
     register: current
 
   - debug: msg="{{ current }}"
