@@ -8,28 +8,17 @@
         instance-state-name: ["running", "pending", "shutting-down", "stopping", "stopped"]
     register: state
 
-  - debug: msg="{{ state.instances[0].tags.Name }}"
-
-#  - debug: 
-#    #  msg: "{{ item.tags | regex_search('Name') }}:{{ item.state | regex_search('name') }}"
-#      msg: "{{ vm | regex_search('tags')}}"
-#    loop: "{{ instances.instances }}"
-#    loop_control:
-#      index_var: vm
-#    register: current
-#
-#  - debug: msg="{{ current }}"
-
-#  - name: Deploy ec2 instance
-#    amazon.aws.ec2_instance:
-#      key_name: "{{ key_name }}"
-#      security_group: "{{ security_group }}"
-#      instance_type: "{{ instance_type }}"
-#      image_id: "{{ image_id }}"
-#      wait: true
-#      region: "{{ region }}"
-#      vpc_subnet_id: "{{ vpc_subnet_id }}"
-#      network:
-#        assign_public_ip: "{{ assign_public_ip }}"
-#      name: "{{ instance_name }}"
-#      count: 1
+  - name: Deploy ec2 instance
+    amazon.aws.ec2_instance:
+      key_name: "{{ key_name }}"
+      security_group: "{{ security_group }}"
+      instance_type: "{{ instance_type }}"
+      image_id: "{{ image_id }}"
+      wait: true
+      region: "{{ region }}"
+      vpc_subnet_id: "{{ vpc_subnet_id }}"
+      network:
+        assign_public_ip: "{{ assign_public_ip }}"
+      name: "{{ instance_name }}"
+      count: 1
+    when: state.instances[0].tags.Name | length == 0
