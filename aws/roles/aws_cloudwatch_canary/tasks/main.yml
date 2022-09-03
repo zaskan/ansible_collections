@@ -42,7 +42,7 @@
 #      secret_type: 'string'
 #      secret: "{{ aap_token.tower_token.token }}"
 
-  - debug: msg="{{ aap_token.controller_token.token }}"
+  - debug: msg="{{ controller_token.token }}"
 
 #  - name: Create bucket for monitoring logs
 #    amazon.aws.s3_object:
