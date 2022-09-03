@@ -1,4 +1,4 @@
-  - name: "Add {{ bucket }} application"
+  - name: "Add application"
     application:
       name: "{{ bucket }}"
       description: "{{ bucket }} deployment"
