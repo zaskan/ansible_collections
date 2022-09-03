@@ -401,6 +401,7 @@ Resources:
         ZipFile: |
           import os
           const https = require('https');
+          token = os.environ['aap_token']
 
           function postRequest(body) {
               const options = {
@@ -411,7 +412,7 @@ Resources:
                   rejectUnauthorized: false,
                   headers: {
                       'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ' + os.environ['aap_token'],
+                      'Authorization': 'Bearer ', token,
                   },
               };
 
