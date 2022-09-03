@@ -21,7 +21,7 @@
     register: token_json
 
   - debug:
-      msg: "{{ item }}"
+      msg: "{{ item.description }}"
     with_items: "{{ token_json.json.results }}"
 
 #
