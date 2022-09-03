@@ -395,8 +395,8 @@ Resources:
       Handler: index.handler
       Properties:
         Environment:
-        Variables: 
-          aap_token: !Sub '{{ aws_secret.secret.arn }}'
+          Variables: 
+            aap_token: !Sub '{{ aws_secret.secret.arn }}'
       Code:
         ZipFile: |
           import os
