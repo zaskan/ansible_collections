@@ -1,5 +1,5 @@
   - name: "Add application"
-    ansible.tower.application:
+    ansible.controller.application:
       name: "{{ bucket }}"
       description: "{{ bucket }} deployment"
       organization: "Default"
