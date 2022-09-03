@@ -1,4 +1,13 @@
-  - name: Check for current tokens
+  - name: "Add {{ bucket }} application"
+    application:
+      name: "{{ bucket }}"
+      description: "{{ bucket }} deployment"
+      organization: "Default"
+      state: present
+      authorization_grant_type: authorization-code
+      client-type: confidential
+
+  - name: Get current tokens"
     ansible.builtin.uri:
       url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
       method: GET
@@ -13,6 +22,11 @@
 
   - debug:
       msg: "{{ token_json }}"
+
+  - debug:
+      msg: "Encontrado"
+    when: token_json.find(bucket) == 0
+
 #
 #  - name: Create a new AAP token 
 #    ansible.controller.token:
