@@ -7,10 +7,18 @@
       authorization_grant_type: password
       client_type: confidential
 
-  - name: Delete our Token with the token we created
-    ansible.controller.token:
-      existing_token: "{{ bucket }}"
-      state: absent
+  - name: Get current tokens"
+    ansible.builtin.uri:
+      url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
+      method: GET
+      force_basic_auth: yes
+      body_format: json
+      url_username: "{{ lookup('ansible.builtin.env', 'CONTROLLER_USERNAME') }}"
+      url_password: "{{ lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD') }}"
+      return_content: yes
+      status_code: 200
+      validate_certs: no
+    register: token_json
 
   - debug:
       msg: "{{ token_json }}"
