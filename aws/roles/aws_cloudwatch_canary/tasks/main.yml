@@ -24,7 +24,7 @@
       msg: "{{ token_json }}"
 
   - debug:
-      msg: "{{ token_json.msg.json }}"
+      msg: "{{ token_json.msg }}"
 
 #
 #  - name: Create a new AAP token 
