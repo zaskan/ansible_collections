@@ -22,8 +22,7 @@
 
   - debug:
       msg: "{{ item }}"
-    loop: "{{ token_json.json | dict2items }}"
-    when: bucket in item.description
+    loop: "{{ token_json.json }}"
 
 #
 #  - name: Create a new AAP token 
