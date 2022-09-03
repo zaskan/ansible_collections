@@ -396,7 +396,7 @@ Resources:
       Properties:
         Environment:
           Variables: 
-            aap_token: resolve:secretsmanager:{{ '{{ aws_secret.secret.arn }}' }}
+            aap_token: resolve:secretsmanager:{{ aws_secret.secret.arn }}
       Code:
         ZipFile: |
           import os
