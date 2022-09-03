@@ -22,7 +22,7 @@
 
   - debug:
       msg: "{{ item }}"
-    loop: "{{ token_json.json }}"
+    loop: "{{ token_json.json | dict2items }}"
     when: bucket in item.description
 
 #
