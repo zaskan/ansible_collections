@@ -5,7 +5,7 @@
       organization: "Default"
       state: present
       authorization_grant_type: authorization-code
-      client-type: confidential
+      client_type: confidential
 
   - name: Get current tokens"
     ansible.builtin.uri:
