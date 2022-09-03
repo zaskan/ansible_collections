@@ -396,7 +396,7 @@ Resources:
       Properties:
         Environment:
           Variables: 
-            aap_token: {% raw %}{{{% endraw %}resolve:secretsmanager:{{ aws_secret.secret.arn }}{% raw %}}}{% endraw %}
+            aap_token:{{{{resolve:secretsmanager:{{ aws_secret.secret.arn }}}}}}
       Code:
         ZipFile: |
           import os
