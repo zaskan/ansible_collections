@@ -24,7 +24,7 @@
       msg: "{{ token_json }}"
 
   - debug:
-      msg: "{{ token_json.json | community.general.json_query('description') }}"
+      msg: "{{ token_json.json | community.general.json_query('*.description') }}"
 
 #
 #  - name: Create a new AAP token 
