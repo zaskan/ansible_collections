@@ -7,7 +7,7 @@
       authorization_grant_type: password
       client_type: confidential
 
-  - name: Get current tokens"
+  - name: Get current tokens
     ansible.builtin.uri:
       url: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/tokens/"
       method: GET
@@ -24,7 +24,7 @@
       msg: "{{ token_json }}"
 
   - debug:
-      msg: "{{ token_json.json }}"
+      msg: "{{ token_json.json | community.general.json_query('description') }}"
 
 #
 #  - name: Create a new AAP token 
