@@ -8,7 +8,7 @@
       client_type: confidential
 
   - name: Delete our Token with the token we created
-    token:
+    ansible.controller.token:
       existing_token: "{{ bucket }}"
       state: absent
 
