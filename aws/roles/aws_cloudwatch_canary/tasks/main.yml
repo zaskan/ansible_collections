@@ -20,8 +20,10 @@
       validate_certs: no
     register: token_json
 
-  - debug:
-      msg: "{{ item.description }}"
+  - name: Delete token if already exists      
+    ansible.controller.token: 
+      existing_token: "{{ item.id }}"
+      state: absent
     with_items: "{{ token_json.json.results }}"
     when: item.description == "hola"
 
