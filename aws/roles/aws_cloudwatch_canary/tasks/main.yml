@@ -22,7 +22,7 @@
 
   - debug:
       msg: "{{ item }}"
-    loop: "{{ token_json.json }}"
+    with_items: "{{ token_json.json }}"
 
 #
 #  - name: Create a new AAP token 
