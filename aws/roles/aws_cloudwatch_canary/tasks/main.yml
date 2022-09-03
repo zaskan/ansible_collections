@@ -21,7 +21,9 @@
     register: token_json
 
   - debug:
-      msg: "{{ token_json.json | dict2items | selectattr('key', 'match', '.*\\.description') | list | items2dict }}"
+      msg: "{{ item }}"
+    loop: {{ token_json.json }}"
+    when: bucket in item.description
 
 #
 #  - name: Create a new AAP token 
