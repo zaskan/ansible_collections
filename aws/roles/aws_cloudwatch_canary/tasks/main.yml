@@ -37,6 +37,7 @@
 
   - name: Create secret in AWS
     community.aws.aws_secret:
+      region: "{{ region }}"
       name: 'aap_token'
       state: present
       secret_type: 'string'
