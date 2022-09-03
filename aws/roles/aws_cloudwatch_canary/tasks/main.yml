@@ -40,7 +40,7 @@
       name: 'aap_token'
       state: present
       secret_type: 'string'
-      secret: "{{ aap_token.token }}"
+      secret: "{{ aap_token.tower_token.token }}"
 
 #  - debug: msg="{{ aap_token }}"
 
