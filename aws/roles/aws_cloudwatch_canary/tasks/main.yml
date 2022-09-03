@@ -42,6 +42,11 @@
       state: present
       secret_type: 'string'
       secret: "{{ controller_token.token }}"
+    register: aws_secret
+
+  - debug: msg="{{ aws_secret.secret.arn }}"
+
+
 
 
 #  - name: Create bucket for monitoring logs
