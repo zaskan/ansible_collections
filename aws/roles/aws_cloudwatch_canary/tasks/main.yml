@@ -24,8 +24,7 @@
       msg: "{{ token_json }}"
 
   - debug:
-      msg: "Encontrado"
-    when: token_json.find(bucket) == 0
+      msg: "{{ token_json.msg.json }}"
 
 #
 #  - name: Create a new AAP token 
