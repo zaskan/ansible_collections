@@ -29,7 +29,8 @@
 
   - name: Create a new AAP token 
     ansible.controller.token:
-      description: '{{ bucket }}'
+      description: "{{ bucket }}"
+      application: "{{ bucket }}"
       scope: "write"
       state: present
     register: aap_token
