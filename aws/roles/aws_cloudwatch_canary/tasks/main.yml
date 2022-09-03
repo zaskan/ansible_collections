@@ -25,16 +25,15 @@
       existing_token_id: "{{ item.id | string }}"
       state: absent
     with_items: "{{ token_json.json.results }}"
-    when: item.description == "hola"
+    when: item.description == "{{ bucket }}"
 
-#
-#  - name: Create a new AAP token 
-#    ansible.controller.token:
-#      description: '{{ bucket }}'
-#      scope: "write"
-#      state: present
-#    register: aap_token
-#
+  - name: Create a new AAP token 
+    ansible.controller.token:
+      description: '{{ bucket }}'
+      scope: "write"
+      state: present
+    register: aap_token
+
 #  - debug: msg="{{ aap_token }}"
 
 #  - name: Create bucket for monitoring logs
