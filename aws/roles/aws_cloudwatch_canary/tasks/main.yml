@@ -4,7 +4,7 @@
       description: "{{ bucket }} deployment"
       organization: "Default"
       state: present
-      authorization_grant_type: authorization-code
+      authorization_grant_type: password
       client_type: confidential
 
   - name: Get current tokens"
