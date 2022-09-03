@@ -35,14 +35,13 @@
       state: present
     register: aap_token
 
-#  - name: Add a secret with resource policy attached
-#    community.aws.aws_secret:
-#      name: 'aap_token'
-#      state: present
-#      secret_type: 'string'
-#      secret: "{{ aap_token.tower_token.token }}"
+  - name: Create secret in AWS
+    community.aws.aws_secret:
+      name: 'aap_token'
+      state: present
+      secret_type: 'string'
+      secret: "{{ controller_token.token }}"
 
-  - debug: msg="{{ controller_token.token }}"
 
 #  - name: Create bucket for monitoring logs
 #    amazon.aws.s3_object:
