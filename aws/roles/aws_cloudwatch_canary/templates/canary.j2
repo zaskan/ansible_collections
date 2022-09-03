@@ -393,8 +393,13 @@ Resources:
     Properties:
       Role: !GetAtt RemediationLambdaFunctionRole.Arn
       Handler: index.handler
+      Properties:
+        Environment:
+        Variables: 
+          aap_token: !Sub {{ aws_secret.secret.arn }} 
       Code:
         ZipFile: |
+          import os
           const https = require('https');
 
           function postRequest(body) {
@@ -406,7 +411,7 @@ Resources:
                   rejectUnauthorized: false,
                   headers: {
                       'Content-Type': 'application/json',
-                      'Authorization': 'Bearer {{ token }}',
+                      'Authorization': 'Bearer ' + os.environ['aap_token'],
                   },
               };
 
