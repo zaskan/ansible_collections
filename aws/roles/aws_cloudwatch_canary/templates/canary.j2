@@ -320,7 +320,7 @@ Resources:
     Properties:
       Name: AAPSecret
       Description: 'AAP Access token'
-      SecretString: "{\"aap_token\":\"{{ controller_token.token }}\"}"
+      SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
 
   Canary:
     Type: 'AWS::Synthetics::Canary'
@@ -403,12 +403,12 @@ Resources:
       Properties:
         Environment:
           Variables: 
-            aap_token: !Ref AapSecret
+            aaptoken: !Ref AapSecret
       Code:
         ZipFile: |
           import os
           const https = require('https');
-          token = os.environ['aap_token']
+          token = os.environ['aaptoken']
 
           function postRequest(body) {
               const options = {
