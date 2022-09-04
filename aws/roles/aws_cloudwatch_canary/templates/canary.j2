@@ -315,7 +315,7 @@ Resources:
             Condition:
               StringEquals:
                 'cloudwatch:namespace': CloudWatchSynthetics
-  Aap_Secret:
+  AapSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: AAPSecret
@@ -403,7 +403,7 @@ Resources:
       Properties:
         Environment:
           Variables: 
-            aap_token: !Ref Aap_Secret
+            aap_token: !Ref AapSecret
       Code:
         ZipFile: |
           import os
