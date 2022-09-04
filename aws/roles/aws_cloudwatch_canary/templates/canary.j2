@@ -315,6 +315,13 @@ Resources:
             Condition:
               StringEquals:
                 'cloudwatch:namespace': CloudWatchSynthetics
+  Aap_Secret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: AAPSecret
+      Description: 'AAP Access token'
+      SecretString: "{\"aap_token\":\"{{ token_json.json.results }}\"}"
+
   Canary:
     Type: 'AWS::Synthetics::Canary'
     Properties:
@@ -396,7 +403,7 @@ Resources:
       Properties:
         Environment:
           Variables: 
-            aap_token:{{{{resolve:secretsmanager:{{ aws_secret.secret.arn }}}}}}
+            aap_token: !Ref Aap_Secret
       Code:
         ZipFile: |
           import os

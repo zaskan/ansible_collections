@@ -35,14 +35,14 @@
       state: present
     register: aap_token
 
-  - name: Create secret in AWS
-    community.aws.aws_secret:
-      region: "{{ region }}"
-      name: 'aap_token'
-      state: present
-      secret_type: 'string'
-      secret: "{{ controller_token.token }}"
-    register: aws_secret
+#  - name: Create secret in AWS
+#    community.aws.aws_secret:
+#      region: "{{ region }}"
+#      name: 'aap_token'
+#      state: present
+#      secret_type: 'string'
+#      secret: "{{ controller_token.token }}"
+#    register: aws_secret
 
   - debug: msg="{{ aws_secret.secret.arn }}"
 
