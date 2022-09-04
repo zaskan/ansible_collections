@@ -315,13 +315,6 @@ Resources:
             Condition:
               StringEquals:
                 'cloudwatch:namespace': CloudWatchSynthetics
-  AapSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Name: AAPSecret
-      Description: 'AAP Access token'
-      SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
-      NoEcho: true
 
   Canary:
     Type: 'AWS::Synthetics::Canary'
@@ -396,6 +389,15 @@ Resources:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+
+  AapSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: AAPSecret
+      Description: 'AAP Access token'
+      SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
+      NoEcho: true
+
   RemediationLambdaFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -403,7 +405,7 @@ Resources:
       Handler: index.handler
       Environment:
         Variables: 
-          aaptoken: !Join ['', ['{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}' ]]
+          aaptoken: !Join ['', ['\{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}\}' ]]
       Code:
         ZipFile: |
           import os.environ
