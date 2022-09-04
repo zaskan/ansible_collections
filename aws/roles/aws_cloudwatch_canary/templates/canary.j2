@@ -407,72 +407,19 @@ Resources:
           aaptoken: !Join ['', ['{% raw %}{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}{% endraw %}' ]]
       Code:
         ZipFile: |
-          import os.environ
-          const https = require('https');
+          import botocore.vendored.requests as requests
+          import os
           token = os.environ['aaptoken']
 
-          function postRequest(body) {
-              const options = {
-                  hostname: 'aap.apps.ocp4cluster.ocp4.cfernand.com',
-                  path: '/api/v2/job_templates/14/launch/',
-                  method: 'POST',
-                  port: 443,
-                  rejectUnauthorized: false,
-                  headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization': 'Bearer ', token,
-                  },
-              };
+          def lambda_handler(event, context):
+            hostname="aap.apps.ocp4cluster.ocp4.cfernand.com"
+            path="/api/v2/job_templates/14/launch/"
+            url="https://" + hostname + path 
+            headers={"Content-Type":"application/json","Authorization": "Bearer " + token }
+            response = requests.post(url, verify=False, headers=headers)
+            print(response.status_code, response.reason)
 
-              return new Promise((resolve, reject) => {
-                  const req = https.request(options, res => {
-                      let rawData = '';
-
-                      res.on('data', chunk => {
-                          rawData += chunk;
-                      });
-
-                      res.on('end', () => {
-                          try {
-                              resolve(JSON.parse(rawData));
-                          } catch (err) {
-                              reject(new Error(err));
-                          }
-                      });
-                  });
-
-                  req.on('error', err => {
-                      reject(new Error(err));
-                  });
-
-                  req.write(JSON.stringify(body));
-                  req.end();
-              });
-          }
-
-          exports.handler = async event => {
-              try {
-                  const result = await postRequest({
-                      name: 'John Smith',
-                      job: 'manager',
-                  });
-                  console.log('result is:?', result);
-
-
-                  return {
-                      statusCode: 200,
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(result),
-                  };
-              } catch (error) {
-                  console.log('Error is:?', error);
-                  return {
-                      statusCode: 400,
-                      body: error.message,
-                  };
-              }
-          };
-      Runtime: nodejs12.x
+      Runtime: python3.7
       Timeout: 30
       TracingConfig:
         Mode: Active
