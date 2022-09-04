@@ -400,10 +400,9 @@ Resources:
     Properties:
       Role: !GetAtt RemediationLambdaFunctionRole.Arn
       Handler: index.handler
-      Properties:
-        Environment:
-          Variables: 
-            aaptoken: !Ref AapSecret
+      Environment:
+        Variables: 
+          aaptoken: !Ref AapSecret
       Code:
         ZipFile: |
           import os
