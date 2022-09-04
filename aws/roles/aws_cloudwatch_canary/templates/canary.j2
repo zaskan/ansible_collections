@@ -321,6 +321,7 @@ Resources:
       Name: AAPSecret
       Description: 'AAP Access token'
       SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
+      NoEcho: true
 
   Canary:
     Type: 'AWS::Synthetics::Canary'
