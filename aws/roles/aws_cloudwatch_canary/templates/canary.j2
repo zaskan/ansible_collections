@@ -396,7 +396,6 @@ Resources:
       Name: AAPSecret
       Description: 'AAP Access token'
       SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
-      NoEcho: true
 
   RemediationLambdaFunction:
     Type: 'AWS::Lambda::Function'
