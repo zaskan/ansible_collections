@@ -58,12 +58,12 @@
       dest: canary.json
     run_once: true
 
-  - name: Delete previous monitoring stack via cloudformation
-    amazon.aws.cloudformation:
-      stack_name: "{{ bucket }}-canary-stack"
-      state: "absent"
-      region: "{{ region }}"
-    run_once: true
+#  - name: Delete previous monitoring stack via cloudformation
+#    amazon.aws.cloudformation:
+#      stack_name: "{{ bucket }}-canary-stack"
+#      state: "absent"
+#      region: "{{ region }}"
+#    run_once: true
 
   - name: Create Cloudwatch monitoring stack
     amazon.aws.cloudformation:

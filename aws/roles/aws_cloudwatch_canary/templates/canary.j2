@@ -320,7 +320,7 @@ Resources:
     Properties:
       Name: AAPSecret
       Description: 'AAP Access token'
-      SecretString: "{\"aap_token\":\"{{ token_json.json.results }}\"}"
+      SecretString: "{\"aap_token\":\"{{ controller_token.token }}\"}"
 
   Canary:
     Type: 'AWS::Synthetics::Canary'
