@@ -405,7 +405,7 @@ Resources:
       Handler: index.handler
       Environment:
         Variables: 
-          aaptoken: !Join ['', ['\{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}\}' ]]
+          aaptoken: !Join ['', ['{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}' ]]
       Code:
         ZipFile: |
           import os.environ
