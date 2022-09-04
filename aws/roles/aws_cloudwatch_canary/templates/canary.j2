@@ -403,10 +403,10 @@ Resources:
       Handler: index.handler
       Environment:
         Variables: 
-          aaptoken: !Ref AapSecret
+          aaptoken: !Join ['', ['{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}' ]]
       Code:
         ZipFile: |
-          import os
+          import os.environ
           const https = require('https');
           token = os.environ['aaptoken']
 
