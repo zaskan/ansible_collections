@@ -413,12 +413,13 @@ Resources:
           import os
           token = os.environ['aaptoken']
           hostname = os.environ['hostname']
-          jobid = os.environ['jobid']
+          jobid = os.environ['job_id']
 
-          def lambda_handler(event, context):
+          def handler(event, context):
             path="/api/v2/job_templates/" + jobid + "/launch/"
-            url="https://" + hostname + path 
+            url=hostname + path 
             headers={"Content-Type":"application/json","Authorization": "Bearer " + token }
+            print(url)
             response = requests.post(url, verify=False, headers=headers)
             print(response.status_code, response.reason)
 
