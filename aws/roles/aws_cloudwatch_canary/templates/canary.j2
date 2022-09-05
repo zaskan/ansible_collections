@@ -413,6 +413,7 @@ Resources:
           import ssl
           import os
           import json
+          import boto3
 
           token = os.environ['aaptoken']
           hostname = os.environ['hostname']
@@ -421,14 +422,24 @@ Resources:
           headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '"}'
 
           def handler(event, context):
-            res = urllib.request.urlopen(urllib.request.Request(
-                  url=hostname + path,
-                  headers=json.loads(headers_data),
-                  method='POST'),
-                  timeout=30,context=ssl.SSLContext())
+            ssm = boto3.client('ssm')
+            reported = ssm.get_parameter(Name='IncidentReported', WithDecryption=False)
+            if reported == "no":
 
-            print(res.status, res.reason)
-            print(json.loads(res.read()))
+              res = urllib.request.urlopen(urllib.request.Request(
+                    url=hostname + path,
+                    headers=json.loads(headers_data),
+                    method='POST'),
+                    timeout=30,context=ssl.SSLContext())
+
+              ssm.put_parameter(
+              Name='IncidentReported',
+              Value='yes',
+              Type='String',
+              Overwrite=True
+  
+              print(res.status, res.reason)
+              print(json.loads(res.read()))
 
       Runtime: python3.7
       Timeout: 30
