@@ -418,9 +418,9 @@ Resources:
                   url=hostname + path,
                   headers=json.loads(headers_data),
                   method='POST'),
-                  timeout=5,context=ssl.SSLContext())
+                  timeout=30,context=ssl.SSLContext())
 
-            print(res.status, resp.reason)
+            print(res.status, res.reason)
             print(json.loads(res.read()))
 
       Runtime: python3.7
