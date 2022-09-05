@@ -389,6 +389,7 @@ Resources:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+        - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
 
   IncidentReported:
     Type: AWS::SSM::Parameter
@@ -467,6 +468,7 @@ Resources:
       Targets:
         - Arn: !Sub '${RemediationLambdaFunction.Arn}'
           Id: EventRule
+
   PermissionForEventsToInvokeLambda:
     Type: 'AWS::Lambda::Permission'
     Properties:
