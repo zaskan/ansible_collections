@@ -412,10 +412,11 @@ Resources:
           import botocore.vendored.requests as requests
           import os
           token = os.environ['aaptoken']
+          hostname = os.environ['hostname']
+          jobid = os.environ['jobid']
 
           def lambda_handler(event, context):
-            hostname="aap.apps.ocp4cluster.ocp4.cfernand.com"
-            path="/api/v2/job_templates/14/launch/"
+            path="/api/v2/job_templates/" + jobid + "/launch/"
             url="https://" + hostname + path 
             headers={"Content-Type":"application/json","Authorization": "Bearer " + token }
             response = requests.post(url, verify=False, headers=headers)
