@@ -424,6 +424,13 @@ Resources:
 
           def handler(event, context):
             ssm = boto3.client('ssm', region_name='{{ region }}')
+
+            if 'IncidentReported' not in locals():
+              ssm.put_parameter(
+              Name='IncidentReported',
+              Value='no',
+              Type='String')
+
             reported = ssm.get_parameter(Name='IncidentReported', WithDecryption=False)
             if reported == "no":
 
