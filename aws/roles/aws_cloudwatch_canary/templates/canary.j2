@@ -390,13 +390,6 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
 
-  AapSecret:
-    Type: AWS::SecretsManager::Secret
-    Properties:
-      Name: AAPSecret
-      Description: 'AAP Access token'
-      SecretString: '{"aaptoken":"{{ controller_token.token }}"}'
-
   RemediationLambdaFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
@@ -404,24 +397,31 @@ Resources:
       Handler: index.handler
       Environment:
         Variables: 
-          aaptoken: !Join ['', ['{% raw %}{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}{% endraw %}' ]]
+          aaptoken: {{ controller_token.token }}
           hostname: {{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}
           job_id: {{ jobid }}
       Code:
         ZipFile: |
-          import botocore.vendored.requests as requests
+          import urllib.request
+          import ssl
           import os
+          import json
+
           token = os.environ['aaptoken']
           hostname = os.environ['hostname']
           jobid = os.environ['job_id']
+          path="/api/v2/job_templates/" + jobid + "/launch/"
+          headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '"}'
 
           def handler(event, context):
-            path="/api/v2/job_templates/" + jobid + "/launch/"
-            url=hostname + path 
-            headers={"Content-Type":"application/json","Authorization": "Bearer " + token }
-            print(url)
-            response = requests.post(url, verify=False, headers=headers)
-            print(response.status_code, response.reason)
+            res = urllib.request.urlopen(urllib.request.Request(
+                  url=hostname + path,
+                  headers=json.loads(headers_data),
+                  method='POST'),
+                  timeout=5,context=ssl.SSLContext())
+
+            print(res.status, resp.reason)
+            print(json.loads(res.read()))
 
       Runtime: python3.7
       Timeout: 30
