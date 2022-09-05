@@ -405,6 +405,8 @@ Resources:
       Environment:
         Variables: 
           aaptoken: !Join ['', ['{% raw %}{{resolve:secretsmanager:', !Ref AapSecret, ':SecretString:aaptoken}}{% endraw %}' ]]
+          hostname: {{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}
+          job_id: {{ jobid }}
       Code:
         ZipFile: |
           import botocore.vendored.requests as requests
