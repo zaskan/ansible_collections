@@ -390,6 +390,14 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
 
+  IncidentReported:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: IncidentReported
+      Type: String
+      Value: no
+      AllowedPattern: "^[a-z]$"
+
   RemediationLambdaFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
