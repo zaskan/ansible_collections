@@ -331,8 +331,8 @@ Resources:
           from botocore.exceptions import ClientError
           ssm = boto3.client('ssm', region_name='{{ region }}')
           target = "https://{{ bucket }}.s3.amazonaws.com/index.html"
-            
-          def handler(event, context):
+           
+          def basic_custom_script(): 
         
             try:
     
@@ -359,6 +359,9 @@ Resources:
             else:
     
               ssm.put_parameter(Name='IncidentReported', Value='no', Type='String', Overwrite=True)
+
+          def handler(event, context):
+              return basic_custom_script()
 
       ExecutionRoleArn:
         'Fn::GetAtt':
