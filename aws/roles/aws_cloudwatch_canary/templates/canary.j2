@@ -353,8 +353,8 @@ Resources:
             if res.status != 200:
      
               ssm.put_parameter(Name='IncidentReported', Value='yes', Type='String', Overwrite=True)
-              return(res.status, res.reason)
               raise Exception("Failed to load page!")
+              return(res.status, res.reason)
   
             else:
     
