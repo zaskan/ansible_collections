@@ -325,12 +325,10 @@ Resources:
       Code:
         Handler: index.handler
         Script: |
-
           import urllib.request
           import ssl
           import boto3
           from botocore.exceptions import ClientError
-
           ssm = boto3.client('ssm', region_name='{{ region }}')
           target = "https://{{ bucket }}.s3.amazonaws.com/index.html"
             
