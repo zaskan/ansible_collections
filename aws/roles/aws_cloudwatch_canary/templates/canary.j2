@@ -415,39 +415,49 @@ Resources:
           import os
           import json
           import boto3
+          from botocore.exceptions import ClientError
 
           token = os.environ['aaptoken']
           hostname = os.environ['hostname']
           jobid = os.environ['job_id']
           path="/api/v2/job_templates/" + jobid + "/launch/"
           headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '"}'
-
+          ssm = boto3.client('ssm', region_name='{{ region }}')
+  
           def handler(event, context):
-            ssm = boto3.client('ssm', region_name='{{ region }}')
-
-            if 'IncidentReported' not in locals():
-              ssm.put_parameter(
-              Name='IncidentReported',
-              Value='no',
-              Type='String')
-
-            reported = ssm.get_parameter(Name='IncidentReported', WithDecryption=False)
-            if reported == "no":
-
+            try:
+              response = ssm.get_parameter(Name="IncidentReported", WithDecryption=False)
+              value = response['Parameter']['Value']
+            except ClientError as e:
+    
+              # If the parameter does not exist, create it and set to no
+    
+              if e.response['Error']['Code'] == 'ParameterNotFound':
+                print("Parameter does not exist and needs to be created.")
+                ssm.put_parameter(
+                Name='IncidentReported',
+                Value='no',
+                Type='String')
+              else:
+                raise
+    
+              # If value is no, launch the job 
+    
+            if value == "no":
               res = urllib.request.urlopen(urllib.request.Request(
-                    url=hostname + path,
-                    headers=json.loads(headers_data),
-                    method='POST'),
-                    timeout=30,context=ssl.SSLContext())
-
-              ssm.put_parameter(
-              Name='IncidentReported',
-              Value='yes',
-              Type='String',
-              Overwrite=True)
-
-              print(res.status, res.reason)
-              print(json.loads(res.read()))
+                url=hostname + path,
+                headers=json.loads(headers_data),
+                method='POST'),
+                timeout=30,context=ssl.SSLContext())
+      
+              #once the job is launched, check the response and set parameter to yes
+    
+              if res.status == 201:
+                ssm.put_parameter(
+                Name='IncidentReported',
+                Value='yes',
+                Type='String',
+                Overwrite=True)
 
       Runtime: python3.7
       Timeout: 30
