@@ -49,6 +49,12 @@
       state: present
     register: url
 
+  - name: Create or update parameter store for monitoring
+    community.aws.aws_ssm_parameter_store:
+      name: "{{ bucket }}-maintenance"
+      description: "Parameter to check maintenance for {{ bucket }} service"
+      value: "no"
+
   - name: Clean template
     ansible.builtin.file:
       path: policy.json
