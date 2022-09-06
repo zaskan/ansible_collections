@@ -324,7 +324,7 @@ Resources:
         'Fn::Sub': '${CanaryName}'
       Code:
         Handler: index.handler
-        ZipFile: |
+        Script: |
 
           import urllib.request
           import ssl
