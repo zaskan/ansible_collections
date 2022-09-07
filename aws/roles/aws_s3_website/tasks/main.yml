@@ -52,6 +52,7 @@
   - name: Create or update parameter store for monitoring
     community.aws.aws_ssm_parameter_store:
       name: "{{ bucket }}-maintenance"
+      region: "{{ region }}"
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "no"
 
