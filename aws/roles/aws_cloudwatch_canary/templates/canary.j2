@@ -336,14 +336,14 @@ Resources:
         
             try:
     
-              response = ssm.get_parameter(Name="IncidentReported", WithDecryption=False)
+              response = ssm.get_parameter(Name="{{ bucket }}-maintenance", WithDecryption=False)
               value = response['Parameter']['Value']
     
             except ClientError as e:
       
               if e.response['Error']['Code'] == 'ParameterNotFound':
                 print("Parameter does not exist and needs to be created.")
-                ssm.put_parameter(Name='IncidentReported', Value='no', Type='String')
+                ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='no', Type='String')
       
             res = urllib.request.urlopen(urllib.request.Request(
               url=target,
@@ -352,13 +352,13 @@ Resources:
 
             if res.status != 200:
      
-              ssm.put_parameter(Name='IncidentReported', Value='yes', Type='String', Overwrite=True)
+              ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='yes', Type='String', Overwrite=True)
               raise Exception("Failed to load page!")
               return(res.status, res.reason)
   
             else:
     
-              ssm.put_parameter(Name='IncidentReported', Value='no', Type='String', Overwrite=True)
+              ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='no', Type='String', Overwrite=True)
 
           def handler(event, context):
               return basic_custom_script()
@@ -405,13 +405,6 @@ Resources:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
-
-  IncidentReported:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: IncidentReported
-      Type: String
-      Value: no
 
   RemediationLambdaFunction:
     Type: 'AWS::Lambda::Function'
