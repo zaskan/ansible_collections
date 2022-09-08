@@ -266,6 +266,7 @@ Resources:
         'Fn::Sub': 'CloudWatchSyntheticsRole-${CanaryName}-${AWS::Region}'
       Description: CloudWatch Synthetics lambda execution role for running canaries
       ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
       AssumeRolePolicyDocument:
@@ -331,33 +332,30 @@ Resources:
           from botocore.exceptions import ClientError
           ssm = boto3.client('ssm', region_name='{{ region }}')
           target = "https://{{ bucket }}.s3.amazonaws.com/index.html"
-           
-          def basic_custom_script(): 
-        
-            try:
-    
-              response = ssm.get_parameter(Name="{{ bucket }}-maintenance", WithDecryption=False)
-              value = response['Parameter']['Value']
-    
-            except ClientError as e:
-      
-              if e.response['Error']['Code'] == 'ParameterNotFound':
-                print("Parameter does not exist and needs to be created.")
-                ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='no', Type='String')
-      
-            res = urllib.request.urlopen(urllib.request.Request(
-              url=target,
-              method='GET'),
-              timeout=15,context=ssl.SSLContext())
 
-            if res.status != 200:
-     
-              ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='yes', Type='String', Overwrite=True)
-              raise Exception("Failed to load page!")
-              return(res.status, res.reason)
-  
-            else:
+          def basic_custom_script():
+
+              try:
+                response = ssm.get_parameter(Name="{{ bucket }}-maintenance", WithDecryption=False)
+                print(response)
+      
+              except:
+        
+                if e.response['Error']['Code'] == 'ParameterNotFound':
+                   print("Parameter does not exist and needs to be created.")
+                   ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='no', Type='String')
+         
+              try:
     
+                res = urllib.request.urlopen(urllib.request.Request(url=target, method='GET'),timeout=15,context=ssl.SSLContext())
+
+              except:
+      
+                ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='yes', Type='String', Overwrite=True)
+                raise Exception("Failed to load page!")
+                return("Check finished")
+      
+              print("Request done")
               ssm.put_parameter(Name='{{ bucket }}-maintenance', Value='no', Type='String', Overwrite=True)
 
           def handler(event, context):
@@ -428,26 +426,25 @@ Resources:
           jobid = os.environ['job_id']
           path="/api/v2/job_templates/" + jobid + "/launch/"
           headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '"}'
-            
+  
           def handler(event, context):
-            
+  
             try:
-              
+    
               res = urllib.request.urlopen(urllib.request.Request(
                 url=hostname + path,
                 headers=json.loads(headers_data),
                 method='POST'),
                 timeout=5,context=ssl.SSLContext())
-                
-              if res.status == 201:
-                
-                print("Remediation triggered")
-                return value
- 
-              else if:
-
-                print("Unable to trigger remediation")
-                return value
+      
+            except:
+    
+              print("Unable to trigger remediation")
+              raise Exception("Unable to trigger remediation")
+              return (res.status)
+    
+            print("Remediation triggered")
+            return (res.status)
 
       Runtime: python3.7
       Timeout: 30
