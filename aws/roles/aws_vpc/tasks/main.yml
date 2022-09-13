@@ -9,17 +9,6 @@
         purpose: "{{ bucket }}"
       tenancy: default
     register: vpc
-    run_once: true
-
-  - name: Create Internet gateway
-    amazon.aws.ec2_vpc_igw:
-      vpc_id: "{{ vpc.vpc.id }}"
-      region: "{{ region }}"
-      state: present
-      tags:
-        purpose: "{{ bucket }}"
-    register: igw
-    run_once: true
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
@@ -30,7 +19,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: localsubnet
-    run_once: true
 
   - name: Create public subnet
     amazon.aws.ec2_vpc_subnet:
@@ -41,7 +29,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: publicsubnet
-    run_once: true
 
   - name: Create security group
     amazon.aws.ec2_group:
@@ -65,7 +52,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: sg
-    run_once: true
 
   - name: Allocate a new elastic IP
     community.aws.ec2_eip:
@@ -79,6 +65,15 @@
       region: "{{ region }}"
     register: eip
 
+  - name: Create Internet gateway
+    amazon.aws.ec2_vpc_igw:
+      vpc_id: "{{ vpc.vpc.id }}"
+      region: "{{ region }}"
+      state: present
+      tags:
+        purpose: "{{ bucket }}"
+    register: igw
+
   - name: Create nat gateway
     amazon.aws.ec2_vpc_nat_gateway:
       state: present
@@ -90,7 +85,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: nat
-    run_once: true
 
   - name: Create route table for public interface and point to internet gateway
     amazon.aws.ec2_vpc_route_table:
@@ -104,7 +98,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: gateway_route_table
-    run_once: true
 
   - name: Create route table for private interface and point to internet gateway
     amazon.aws.ec2_vpc_route_table:
@@ -118,4 +111,3 @@
       tags:
         purpose: "{{ bucket }}"
     register: nat_gateway_route_table
-    run_once: true
