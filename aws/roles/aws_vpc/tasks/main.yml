@@ -86,19 +86,6 @@
         purpose: "{{ bucket }}"
     register: nat
 
-  - name: Create route table for public interface and point to internet gateway
-    amazon.aws.ec2_vpc_route_table:
-      region: "{{ region }}"
-      vpc_id: "{{ vpc.vpc.id }}"
-      subnets:
-        - "{{ publicsubnet.subnet.id }}"
-      routes:
-        - dest: 0.0.0.0/0
-          gateway_id: "{{ igw.gateway_id }}"
-      tags:
-        purpose: "{{ bucket }}"
-    register: gateway_route_table
-
   - name: Create route table for private interface and point to internet gateway
     amazon.aws.ec2_vpc_route_table:
       region: "{{ region }}"
@@ -109,5 +96,21 @@
         - dest: 0.0.0.0/0
           gateway_id: "{{ nat.nat_gateway_id }}"
       tags:
+        Name: "Private Route for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: nat_gateway_route_table
+
+  - name: Create route table for public interface and point to internet gateway
+    amazon.aws.ec2_vpc_route_table:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      subnets:
+        - "{{ publicsubnet.subnet.id }}"
+      routes:
+        - dest: 0.0.0.0/0
+          gateway_id: "{{ igw.gateway_id }}"
+      tags:
+        Name: "Public Route for {{ bucket }}"
+        purpose: "{{ bucket }}"
+    register: gateway_route_table
+
