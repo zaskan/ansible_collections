@@ -6,6 +6,7 @@
       cidr_block: 10.10.0.0/16
       region: "{{ region }}"
       tags:
+        Name: "{{ bucket }} VPC"
         purpose: "{{ bucket }}"
       tenancy: default
     register: vpc
@@ -17,6 +18,7 @@
       vpc_id: "{{ vpc.vpc.id }}"
       cidr: 10.10.1.0/24
       tags:
+        Name: "Private Subnet for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: localsubnet
 
@@ -27,6 +29,7 @@
       vpc_id: "{{ vpc.vpc.id }}"
       cidr: 10.10.2.0/24
       tags:
+        Name: "Public Subnet for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: publicsubnet
 
@@ -50,6 +53,7 @@
           to_port: 22
           cidr_ip: 0.0.0.0/0
       tags:
+        Name: "Security group for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: sg
 
@@ -59,6 +63,7 @@
       tag_name: purpose
       tag_value: "{{ bucket }}"
       tags:
+        Name: "Elastic IP for for {{ bucket }}"
         purpose: "{{ bucket }}"
       reuse_existing_ip_allowed: true
       in_vpc: true
@@ -71,6 +76,7 @@
       region: "{{ region }}"
       state: present
       tags:
+        Name: "Internet gateway for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: igw
 
@@ -83,6 +89,7 @@
       wait: true
       region: "{{ region }}"
       tags:
+        Name: "Nat gateway for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: nat
 
