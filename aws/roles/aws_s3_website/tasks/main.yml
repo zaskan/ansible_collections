@@ -1,4 +1,4 @@
-  - name: Create or update parameter store for monitoring
+  - name: Enabling maintenance flag
     community.aws.aws_ssm_parameter_store:
       name: "{{ bucket }}-maintenance"
       region: "{{ region }}"
@@ -56,13 +56,6 @@
       state: present
     register: url
 
-  - name: Create or update parameter store for monitoring
-    community.aws.aws_ssm_parameter_store:
-      name: "{{ bucket }}-maintenance"
-      region: "{{ region }}"
-      description: "Parameter to check maintenance for {{ bucket }} service"
-      value: "no"
-
   - name: Clean template
     ansible.builtin.file:
       path: policy.json
@@ -91,4 +84,10 @@
       data:
         target_url: "{{ target_url }}"
 
+  - name: Disabling maintenance flag
+    community.aws.aws_ssm_parameter_store:
+      name: "{{ bucket }}-maintenance"
+      region: "{{ region }}"
+      description: "Parameter to check maintenance for {{ bucket }} service"
+      value: "no"
 
