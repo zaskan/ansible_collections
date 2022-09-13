@@ -105,3 +105,17 @@
         purpose: "{{ bucket }}"
     register: gateway_route_table
     run_once: true
+
+  - name: Create route table for private interface and point to internet gateway
+    amazon.aws.ec2_vpc_route_table:
+      region: "{{ region }}"
+      vpc_id: "{{ vpc.vpc.id }}"
+      subnets:
+        - "{{ localsubnet.subnet.id }}"
+      routes:
+        - dest: 0.0.0.0/0
+          gateway_id: "{{ nat.nat_gateway_id }}"
+      tags:
+        purpose: "{{ bucket }}"
+    register: nat_gateway_route_table
+    run_once: true
