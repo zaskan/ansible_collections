@@ -37,7 +37,7 @@
     amazon.aws.ec2_group:
       region: "{{ region }}"
       name: "{{ bucket }}-sg"
-      description: an example EC2 group
+      description: "Security group for {{ bucket }}"
       vpc_id: "{{ vpc.vpc.id }}"
       rules:
         - proto: tcp
