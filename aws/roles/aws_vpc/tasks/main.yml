@@ -80,6 +80,13 @@
         purpose: "{{ bucket }}"
     register: igw
 
+  - name: Get nat gateways with specific filter
+    amazon.aws.ec2_vpc_nat_gateway_info:
+      region: "{{ region }}"
+      filters:
+        subnet-id: "{{ publicsubnet.subnet.id }}"
+    register: existing_nat_gateways
+
   - name: Create nat gateway
     amazon.aws.ec2_vpc_nat_gateway:
       state: present
@@ -91,6 +98,7 @@
       tags:
         Name: "Nat gateway for {{ bucket }}"
         purpose: "{{ bucket }}"
+    when: existing_nat_gateways.result > 0
     register: nat
 
   - name: Create route table for private interface and point to internet gateway
