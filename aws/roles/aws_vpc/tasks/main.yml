@@ -57,6 +57,13 @@
         purpose: "{{ bucket }}"
     register: sg
 
+  - name: Get nat gateways with specific filter
+    amazon.aws.ec2_vpc_nat_gateway_info:
+      region: "{{ region }}"
+      filters:
+        subnet-id: "{{ publicsubnet.subnet.id }}"
+    register: existing_nat_gateways
+
   - name: Allocate a new elastic IP
     community.aws.ec2_eip:
       state: present
@@ -69,6 +76,7 @@
       in_vpc: true
       region: "{{ region }}"
     register: eip
+    when: existing_nat_gateways.result == 0
 
   - name: Create Internet gateway
     amazon.aws.ec2_vpc_igw:
@@ -79,13 +87,6 @@
         Name: "Internet gateway for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: igw
-
-  - name: Get nat gateways with specific filter
-    amazon.aws.ec2_vpc_nat_gateway_info:
-      region: "{{ region }}"
-      filters:
-        subnet-id: "{{ publicsubnet.subnet.id }}"
-    register: existing_nat_gateways
 
   - name: Create nat gateway
     amazon.aws.ec2_vpc_nat_gateway:
