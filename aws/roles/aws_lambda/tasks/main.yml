@@ -89,7 +89,7 @@
       - "{{ publicsubnet.subnet.id }}"
       vpc_security_group_ids:
       - "{{ sg.group_id }}"
-      environment_variables: '{{ item.env_vars }}'
+      environment_variables:
       - aaptoken: "{{ controller_token.token }}"
       - hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
       - job_id: "{{ jobid }}"
