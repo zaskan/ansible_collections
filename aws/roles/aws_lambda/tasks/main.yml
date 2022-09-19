@@ -63,13 +63,6 @@
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
     register: aws_lambda_role
 
-  - name: Create maintenance flag
-    community.aws.aws_ssm_parameter_store:
-      name: "{{ bucket }}-maintenance"
-      region: "{{ region }}"
-      description: "Parameter to check maintenance for {{ bucket }} service"
-      value: "yes"
-
 #  - name: Create lambda zip
 #    ansible.builtin.file:
 #      path: ./website_monitoring
@@ -109,6 +102,7 @@
         hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
         job_id: "{{ jobid | string }}"
       timeout: 15
+      memory_size: 512
       tags:
         purpose: "{{ bucket }}"
     register: aws_lambda
@@ -122,6 +116,13 @@
       principal: events.amazonaws.com
       region: "{{ region }}"
     register: lambda_policy_action
+
+  - name: Create maintenance flag
+    community.aws.aws_ssm_parameter_store:
+      name: "{{ bucket }}-maintenance"
+      region: "{{ region }}"
+      description: "Parameter to check maintenance for {{ bucket }} service"
+      value: "no"
 
   - name: Schedule lambda run
     community.aws.cloudwatchevent_rule:
