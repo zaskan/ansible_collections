@@ -76,7 +76,7 @@
       in_vpc: true
       region: "{{ region }}"
     register: eip
-    when: existing_nat_gateways.result == 0
+    when: existing_nat_gateways.result | length == 0
 
   - name: Create Internet gateway
     amazon.aws.ec2_vpc_igw:
@@ -99,7 +99,7 @@
       tags:
         Name: "Nat gateway for {{ bucket }}"
         purpose: "{{ bucket }}"
-    when: existing_nat_gateways.result == 0
+    when: existing_nat_gateways.result | length == 0
     register: nat
 
   - name: Create route table for private interface and point to nat gateway
@@ -115,7 +115,7 @@
         Name: "Private Route for {{ bucket }}"
         purpose: "{{ bucket }}"
     register: nat_gateway_route_table
-    when: existing_nat_gateways.result == 0
+    when: existing_nat_gateways.result | length == 0
 
   - name: Create route table for public interface and point to internet gateway
     amazon.aws.ec2_vpc_route_table:
