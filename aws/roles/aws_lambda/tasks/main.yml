@@ -108,5 +108,3 @@
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
           arn: "{{ aws_lambda.configuration.function_arn }}"
-      tags:
-        purpose: "{{ bucket }}"
