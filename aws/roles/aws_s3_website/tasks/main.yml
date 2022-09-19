@@ -7,8 +7,9 @@
     register: bucket_state
 
   - name: Notify when bucket exists
-    ansible.builtin.fail:
-      msg: "{{ bucket }} already exists"
+    ansible.builtin.pause:
+      prompt: "Warning - {{ bucket }} already exists"
+      seconds: 5
     when: bucket_state.status != 404
 
   - name: Create bucket
