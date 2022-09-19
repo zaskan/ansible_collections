@@ -101,7 +101,7 @@
   - name: Schedule lambda run
     community.aws.cloudwatchevent_rule:
       name: MyCronTask
-      schedule_expression: "rate(1 minutes)"
+      schedule_expression: "cron(* * * * *)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
       region: "{{ region }}"
       targets:
