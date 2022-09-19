@@ -1,3 +1,16 @@
+  - name: Check and fail if name already exists
+    ansible.builtin.uri:
+      url: "https://{{ bucket }}.s3.amazonaws.com"
+      method: GET
+      status_code: 404
+    ignore_errors: yes
+    register: bucket_state
+
+  - name: Notify when bucket exists
+    ansible.builtin.fail:
+      msg: "{{ bucket }} already exists"
+    when: bucket_state.status != 404
+
   - name: Create bucket
     amazon.aws.s3_object:
       region: "{{ region }}"

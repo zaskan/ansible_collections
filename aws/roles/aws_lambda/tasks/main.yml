@@ -8,7 +8,7 @@
 
   - name: Notify when bucket exists
     ansible.builtin.pause:
-      prompt: "Warning. {{ bucket }} already exists }}"
+      prompt: "Warning - {{ bucket }} already exists"
       seconds: 5
     when: bucket_state.status != 404
   
