@@ -80,6 +80,7 @@
     community.aws.lambda:
       name: website_monitoring
       state: present
+      region: "{{ region }}"
       zip_file: ./lambda_monitoring_and_remediation.zip
       runtime: 'python3.7'
       role: "{{ aws_lambda_role.iam_role.arn }}"
