@@ -1,4 +1,4 @@
-  - name: Add application
+  - name: Create AAP application
     ansible.controller.application:
       name: "{{ bucket }}"
       description: "{{ bucket }} deployment"
@@ -20,14 +20,14 @@
       validate_certs: no
     register: token_json
 
-  - name: Delete token if already exists      
-    ansible.controller.token: 
+  - name: Delete token if already exists
+    ansible.controller.token:
       existing_token_id: "{{ item.id | string }}"
       state: absent
     with_items: "{{ token_json.json.results }}"
     when: item.description == "{{ bucket }}"
 
-  - name: Create a new AAP token 
+  - name: Create a new AAP token
     ansible.controller.token:
       description: "{{ bucket }}"
       application: "{{ bucket }}"
@@ -35,43 +35,66 @@
       state: present
     register: aap_token
 
-#  - name: Create secret in AWS
-#    community.aws.aws_secret:
-#      region: "{{ region }}"
-#      name: 'aap_token'
-#      state: present
-#      secret_type: 'string'
-#      secret: "{{ controller_token.token }}"
-#    register: aws_secret
+  - name: Include VPC role to create infra for lambda
+    ansible.builtin.include_role:
+      name: zaskan.aws.aws_vpc
 
-  - name: Create bucket for monitoring logs
-    amazon.aws.s3_object:
-      region: "{{ region }}"
-      bucket: "{{ bucket }}-canary"
-      mode: create
-      tags:
-        purpose: "{{ bucket }}"
+  - name: Create a role and attach a managed policy
+    community.aws.iam_role:
+      name: lambdamonitoringrole
+      assume_role_policy_document: "{{ lookup('file','policy.json') }}
+      managed_policies:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+        - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
+    register: aws_lambda_role
 
-  - name: Parse policy template
+  - name: Create lambda zip
+    ansible.builtin.file:
+      path: ./website_monitoring
+      state: directory
+      mode: '0755'
+    delegate_to: localhost
+
+  - name: Template lambda
     ansible.builtin.template:
-      src: canary.j2
-      dest: canary.json
-    run_once: true
+      src: lambda_monitoring_and_remediation.py.j2
+      dest: ./lambda_monitoring_and_remediation.py
+    delegate_to: localhost
 
-#  - name: Delete previous monitoring stack via cloudformation
-#    amazon.aws.cloudformation:
-#      stack_name: "{{ bucket }}-canary-stack"
-#      state: "absent"
-#      region: "{{ region }}"
-#    run_once: true
+  - name: Create a bz2 archive of multiple files, rooted at /path
+    community.general.archive:
+      path: ./website_monitoring
+      dest: ./lambda_monitoring_and_remediation.zip
+      format: zip
+    delegate_to: localhost
 
-  - name: Create Cloudwatch monitoring stack
-    amazon.aws.cloudformation:
-      stack_name: "{{ bucket }}-canary-stack"
-      state: "present"
-      region: "{{ region }}"
-      disable_rollback: false
-      template: "canary.json"
+  - name: Create lambda
+    community.aws.lambda:
+      name: website_monitoring
+      state: present
+      zip_file: ./lambda_monitoring_and_remediation.zip
+      runtime: 'python3.7'
+      role: "{{ aws_lambda_role.iam_role.arn }}"
+      handler: 'lambda_monitoring_and_remediation.aws_lambda_role'
+      vpc_subnet_ids:
+      - "{{ localsubnet.subnet.id }}"
+      - "{{ publicsubnet.subnet.id }}"
+      vpc_security_group_ids:
+      - "{{ sg.group_id }}"
+      environment_variables: '{{ item.env_vars }}'
+      - aaptoken: {{ controller_token.token }}
+      - hostname: {{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}
+      - job_id: {{ jobid }}
       tags:
         purpose: "{{ bucket }}"
-    run_once: true
+    register: aws_lambda
+
+  - name: Schedule lambda run
+    community.aws.cloudwatchevent_rule:
+      name: MyCronTask
+      schedule_expression: "rate(1 minutes)"
+      description: "Run {{ aws_lambda.function_name }}"
+      targets:
+        - id: "{{ aws_lambda.function_name }}_scheduler"
+          arn: "{{ aws_lambda.function_arn }}"
