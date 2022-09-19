@@ -101,10 +101,12 @@
 
   - name: Schedule lambda run
     community.aws.cloudwatchevent_rule:
-      name: MyCronTask
+      name: "{{ bucket }} Service monitoring scheduler"
       schedule_expression: "rate(1 minute)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
       region: "{{ region }}"
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
           arn: "{{ aws_lambda.configuration.function_arn }}"
+      tags:
+        purpose: "{{ bucket }}"
