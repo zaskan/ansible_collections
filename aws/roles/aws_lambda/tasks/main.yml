@@ -35,9 +35,16 @@
       state: present
     register: aap_token
 
+  - name: Check if VPC is present
+    amazon.aws.ec2_vpc_net_info:
+      filters:
+        "tag:Name": "{{ bucket-vpc }}"
+    register: vpc_info
+
   - name: Include VPC role to create infra for lambda
     ansible.builtin.include_role:
       name: zaskan.aws.aws_vpc
+    when: vpc_info.vpcs | length == 0
 
   - name: Create a role and attach a managed policy
     community.aws.iam_role:
@@ -66,7 +73,7 @@
   - name: Template lambda
     ansible.builtin.template:
       src: lambda_monitoring_and_remediation.py.j2
-      dest: ./website_monitoring/lambda_monitoring_and_remediation.py
+      dest: ./website_monitoring/index.py
     delegate_to: localhost
 
   - name: Create a bz2 archive of multiple files, rooted at /path
@@ -84,7 +91,7 @@
       zip_file: ./lambda_monitoring_and_remediation.zip
       runtime: 'python3.7'
       role: "{{ aws_lambda_role.iam_role.arn }}"
-      handler: 'lambda_monitoring_and_remediation.aws_lambda_role'
+      handler: 'index.handler'
       vpc_subnet_ids:
       - "{{ localsubnet.subnet.id }}"
       - "{{ publicsubnet.subnet.id }}"
