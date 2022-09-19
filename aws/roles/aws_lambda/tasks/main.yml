@@ -103,6 +103,7 @@
       name: MyCronTask
       schedule_expression: "rate(1 minutes)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
+      region: "{{ region }}"
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
           arn: "{{ aws_lambda.configuration.function_arn }}"
