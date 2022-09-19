@@ -35,6 +35,10 @@
       state: present
     register: aap_token
 
+  - name: Include VPC role to create infra for lambda
+    ansible.builtin.include_role:
+      name: zaskan.aws.aws_vpc
+
   - name: Create a role and attach a managed policy
     community.aws.iam_role:
       name: lambdamonitoringrole
