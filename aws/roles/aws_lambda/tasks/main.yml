@@ -49,6 +49,13 @@
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
     register: aws_lambda_role
 
+  - name: Create maintenance flag
+    community.aws.aws_ssm_parameter_store:
+      name: "{{ bucket }}-maintenance"
+      region: "{{ region }}"
+      description: "Parameter to check maintenance for {{ bucket }} service"
+      value: "yes"
+
   - name: Create lambda zip
     ansible.builtin.file:
       path: ./website_monitoring
