@@ -42,7 +42,7 @@
   - name: Create a role and attach a managed policy
     community.aws.iam_role:
       name: lambdamonitoringrole
-      assume_role_policy_document: "{{ lookup('file','policy.json') }}
+      assume_role_policy_document: "{{ lookup('file','policy.json') }}"
       managed_policies:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
