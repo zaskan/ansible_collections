@@ -113,6 +113,15 @@
         purpose: "{{ bucket }}"
     register: aws_lambda
 
+  - name: Lambda S3 event notification
+    community.aws.lambda_policy:
+      state: present
+      function_name: website_monitoring
+      statement_id: "lambda-s3-{{ bucket }}"
+      action: lambda:InvokeFunction
+      principal: s3.amazonaws.com
+    register: lambda_policy_action
+
   - name: Schedule lambda run
     community.aws.cloudwatchevent_rule:
       name: "{{ bucket }}_Service_Monitoring_Scheduler"
