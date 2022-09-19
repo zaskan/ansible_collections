@@ -93,7 +93,7 @@
       environment_variables:
         aaptoken: "{{ controller_token.token }}"
         hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
-        job_id: "{{ jobid }}"
+        job_id: "{{ jobid | str}}"
       tags:
         purpose: "{{ bucket }}"
     register: aws_lambda
