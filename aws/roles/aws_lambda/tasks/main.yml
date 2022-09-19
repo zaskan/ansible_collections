@@ -33,6 +33,7 @@
       application: "{{ bucket }}"
       scope: "write"
       state: present
+      region: "{{ region }}"
     register: aap_token
 
   - name: Check if VPC is present
