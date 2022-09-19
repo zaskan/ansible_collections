@@ -56,23 +56,23 @@
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "yes"
 
-  - name: Create lambda zip
-    ansible.builtin.file:
-      path: ./website_monitoring
-      state: directory
-      mode: '0755'
-    delegate_to: localhost
+#  - name: Create lambda zip
+#    ansible.builtin.file:
+#      path: ./website_monitoring
+#      state: directory
+#      mode: '0755'
+#    delegate_to: localhost
 
   - name: Template lambda
     ansible.builtin.template:
       src: lambda_monitoring_and_remediation.py.j2
-      dest: ./website_monitoring/index.py
+      dest: ./index.py
     delegate_to: localhost
 
   - name: Create a bz2 archive of multiple files, rooted at /path
     community.general.archive:
-      path: ./website_monitoring
-      dest: ./lambda_monitoring_and_remediation.zip
+      path: ./index.py
+      dest: ./website_monitoring.zip
       format: zip
     delegate_to: localhost
 
@@ -94,6 +94,7 @@
         aaptoken: "{{ controller_token.token }}"
         hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
         job_id: "{{ jobid | string }}"
+      timeout: 15
       tags:
         purpose: "{{ bucket }}"
     register: aws_lambda
