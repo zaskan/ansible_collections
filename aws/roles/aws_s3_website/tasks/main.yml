@@ -13,10 +13,11 @@
     when: bucket_state.status != 404
 
   - name: Create bucket
-    amazon.aws.s3_object:
+    amazon.aws.aws_s3:
       region: "{{ region }}"
       bucket: "{{ bucket }}"
       mode: create
+      permission: public-read
 
   - name: Create policy template
     ansible.builtin.template:
