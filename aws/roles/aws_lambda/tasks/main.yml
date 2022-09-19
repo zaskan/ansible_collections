@@ -89,7 +89,7 @@
       state: present
       region: "{{ region }}"
       zip_file: ./website_monitoring.zip
-      runtime: 'python3.7'
+      runtime: 'python3.8'
       role: "{{ aws_lambda_role.iam_role.arn }}"
       handler: 'index.handler'
       vpc_subnet_ids:
