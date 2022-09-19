@@ -101,7 +101,7 @@
 
   - name: Schedule lambda run
     community.aws.cloudwatchevent_rule:
-      name: "{{ bucket }} Service monitoring scheduler"
+      name: "{{ bucket }}_Service_Monitoring_Scheduler"
       schedule_expression: "rate(1 minute)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
       region: "{{ region }}"
