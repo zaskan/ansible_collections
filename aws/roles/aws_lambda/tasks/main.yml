@@ -35,18 +35,6 @@
       state: present
     register: aap_token
 
-  - name: Check if VPC is present
-    amazon.aws.ec2_vpc_net_info:
-      filters:
-        "tag:Name": "{{ bucket }}-vpc"
-      region: "{{ region }}"
-    register: vpc_info
-
-  - name: Include VPC role to create infra for lambda
-    ansible.builtin.include_role:
-      name: zaskan.aws.aws_vpc
-    when: vpc_info.vpcs | length == 0
-
   - name: Create a role and attach a managed policy
     community.aws.iam_role:
       name: lambdamonitoringrole
