@@ -119,7 +119,7 @@
       function_name: website_monitoring
       statement_id: "lambda-s3-{{ bucket }}"
       action: lambda:InvokeFunction
-      principal: s3.amazonaws.com
+      principal: events.amazonaws.com
       region: "{{ region }}"
     register: lambda_policy_action
 
