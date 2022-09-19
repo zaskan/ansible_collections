@@ -120,6 +120,7 @@
       statement_id: "lambda-s3-{{ bucket }}"
       action: lambda:InvokeFunction
       principal: s3.amazonaws.com
+      region: "{{ region }}"
     register: lambda_policy_action
 
   - name: Schedule lambda run
