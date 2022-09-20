@@ -138,6 +138,10 @@
       source_arn: "{{ event.rule.arn }}"
     register: lambda_policy_action
 
+  - name: show results
+    ansible.builtin.debug:
+      var: lambda_policy_action
+
   - name: Create maintenance flag
     community.aws.aws_ssm_parameter_store:
       name: "{{ bucket }}-maintenance"
