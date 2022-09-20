@@ -113,6 +113,7 @@
       schedule_expression: "rate(1 minute)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
       region: "{{ region }}"
+      role_arn: "{{ aws_lambda_role.iam_role.arn }}"
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
           arn: "{{ aws_lambda.configuration.function_arn }}"
