@@ -53,15 +53,24 @@
     ansible.builtin.include_role:
       name: zaskan.aws.aws_vpc
 
-  - name: Create a role and attach a managed policy
+  - name: Create a role and attach a managed policy for lambda
     community.aws.iam_role:
       name: lambdamonitoringrole
-      assume_role_policy_document: "{{ lookup('file','policy.json') }}"
+      assume_role_policy_document: "{{ lookup('file','policy_lambda.json') }}"
       managed_policies:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
     register: aws_lambda_role
+
+  - name: Create a role and attach a managed policy for event
+    community.aws.iam_role:
+      name: eventmonitoringrole
+      assume_role_policy_document: "{{ lookup('file','policy_event.json') }}"
+      managed_policies:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
+    register: aws_event_role
 
 #  - name: Create lambda zip
 #    ansible.builtin.file:
@@ -113,7 +122,7 @@
       schedule_expression: "rate(1 minute)"
       description: "Run {{ aws_lambda.configuration.function_name }}"
       region: "{{ region }}"
-      role_arn: "{{ aws_lambda_role.iam_role.arn }}"
+      role_arn: "{{ aws_event_role.iam_role.arn }}"
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
           arn: "{{ aws_lambda.configuration.function_arn }}"
