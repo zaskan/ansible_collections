@@ -107,7 +107,18 @@
         purpose: "{{ bucket }}"
     register: aws_lambda
 
-  - name: Lambda S3 event notification
+  - name: Schedule lambda 
+    community.aws.cloudwatchevent_rule:
+      name: "{{ bucket }}_Service_Monitoring_Scheduler"
+      schedule_expression: "rate(1 minute)"
+      description: "Run {{ aws_lambda.configuration.function_name }}"
+      region: "{{ region }}"
+      targets:
+        - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
+          arn: "{{ aws_lambda.configuration.function_arn }}"
+    register: event
+
+  - name: Create lambda policy
     community.aws.lambda_policy:
       state: present
       function_name: website_monitoring
@@ -115,6 +126,7 @@
       action: lambda:InvokeFunction
       principal: events.amazonaws.com
       region: "{{ region }}"
+      source_arn: "{{ event.rule.arn }}"
     register: lambda_policy_action
 
   - name: Create maintenance flag
@@ -124,12 +136,3 @@
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "no"
 
-  - name: Schedule lambda run
-    community.aws.cloudwatchevent_rule:
-      name: "{{ bucket }}_Service_Monitoring_Scheduler"
-      schedule_expression: "rate(1 minute)"
-      description: "Run {{ aws_lambda.configuration.function_name }}"
-      region: "{{ region }}"
-      targets:
-        - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
-          arn: "{{ aws_lambda.configuration.function_arn }}"
