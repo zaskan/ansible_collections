@@ -79,7 +79,7 @@
       dest: ./index.py
     delegate_to: localhost
 
-  - name: Create a bz2 archive of multiple files, rooted at /path
+  - name: Pack lambda code
     community.general.archive:
       path: ./index.py
       dest: ./website_monitoring.zip
@@ -93,7 +93,7 @@
       region: "{{ region }}"
       zip_file: ./website_monitoring.zip
       runtime: 'python3.8'
-      role: lambdamonitoringrole
+      role: "{{ aws_lambda_role.iam_role.arn }}"
       handler: 'index.handler'
       vpc_subnet_ids:
       - "{{ localsubnet.subnet.id }}"
