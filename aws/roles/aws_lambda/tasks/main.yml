@@ -61,6 +61,7 @@
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
+    wait: true
     register: aws_lambda_role
 
   - name: Create a role and attach a managed policy for event
@@ -69,6 +70,7 @@
       assume_role_policy_document: "{{ lookup('file','policy_event.json') }}"
       managed_policies:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+    wait: true
     register: aws_event_role
 
   - name: Template lambda
