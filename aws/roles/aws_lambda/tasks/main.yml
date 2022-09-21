@@ -117,7 +117,8 @@
       role_arn: "{{ aws_event_role.iam_role.arn }}"
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
-          arn: "{{ aws_lambda.configuration.function_arn }}"
+#          arn: "{{ aws_lambda.configuration.function_arn }}"
+          arn: "{{ aws_lambda.configuration.function_arn|regex_replace(aws_lambda.configuration.function_arn.split(':')[-1]))|regex_replace(':$','') }}"
     register: event
 
   - name: Create lambda policy
@@ -128,8 +129,7 @@
       action: lambda:InvokeFunction
       principal: events.amazonaws.com
       region: "{{ region }}"
-      #source_arn: "{{ event.rule.arn }}"
-      source_arn: "{{ (event.rule.arn|regex_replace(event.rule.arn.split(':')[-1]))|regex_replace(':$','') }}"
+      source_arn: "{{ event.rule.arn }}"
     register: lambda_policy_action
 
   - name: Create maintenance flag
