@@ -86,9 +86,13 @@
       format: zip
     delegate_to: localhost
 
-  - name: describe a single role
+  - name: Get Role info
     community.aws.iam_role_info:
       name: lambdamonitoringrole
+
+  - name: Get Role info
+    community.aws.iam_role_info:
+      name: eventmonitoringrole
 
   - name: Create lambda
     community.aws.lambda:
@@ -113,9 +117,6 @@
       tags:
         purpose: "{{ bucket }}"
     register: aws_lambda
-
-  - debug:
-      msg: "{{ aws_lambda }}"
 
   - name: Schedule lambda 
     community.aws.cloudwatchevent_rule:
