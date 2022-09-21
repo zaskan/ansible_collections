@@ -58,7 +58,7 @@
       name: lambdamonitoringrole
       assume_role_policy_document: "{{ lookup('file','policy_lambda.json') }}"
       managed_policies:
-        - 'arn:aws:iam::aws:policy/service-role/AWSLambda_FullAccess'
+        - 'arn:aws:iam::aws:policy/AWSLambda_FullAccess'
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonSSMFullAccess'
       wait: true
