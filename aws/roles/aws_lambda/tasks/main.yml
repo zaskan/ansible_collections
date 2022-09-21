@@ -86,6 +86,10 @@
       format: zip
     delegate_to: localhost
 
+  - name: describe a single role
+    community.aws.iam_role_info:
+      name: lambdamonitoringrole
+
   - name: Create lambda
     community.aws.lambda:
       name: website_monitoring
