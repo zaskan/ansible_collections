@@ -71,13 +71,6 @@
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
     register: aws_event_role
 
-#  - name: Create lambda zip
-#    ansible.builtin.file:
-#      path: ./website_monitoring
-#      state: directory
-#      mode: '0755'
-#    delegate_to: localhost
-
   - name: Template lambda
     ansible.builtin.template:
       src: lambda_monitoring_and_remediation.py.j2
@@ -136,12 +129,8 @@
       principal: events.amazonaws.com
       region: "{{ region }}"
       #source_arn: "{{ event.rule.arn }}"
-      source_arn: "{{ "{{ (event.rule.arn|regex_replace(path.split(':')[-1]))|regex_replace(':$','') }}"
+      source_arn: "{{ (event.rule.arn|regex_replace(path.split(':')[-1]))|regex_replace(':$','') }}"
     register: lambda_policy_action
-
-  - name: show results
-    ansible.builtin.debug:
-      var: lambda_policy_action
 
   - name: Create maintenance flag
     community.aws.aws_ssm_parameter_store:
