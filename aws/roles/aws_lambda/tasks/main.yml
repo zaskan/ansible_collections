@@ -118,7 +118,7 @@
       targets:
         - id: "{{ aws_lambda.configuration.function_name }}_scheduler"
 #          arn: "{{ aws_lambda.configuration.function_arn }}"
-          arn: "{{ aws_lambda.configuration.function_arn|regex_replace(aws_lambda.configuration.function_arn.split(':')[-1]))|regex_replace(':$','') }}"
+          arn: "{{ (aws_lambda.configuration.function_arn|regex_replace(aws_lambda.configuration.function_arn.split(':')[-1]))|regex_replace(':$','') }}"
     register: event
 
   - name: Create lambda policy
