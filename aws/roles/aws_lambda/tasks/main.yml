@@ -91,7 +91,7 @@
       region: "{{ region }}"
       zip_file: ./website_monitoring.zip
       runtime: 'python3.8'
-      role: "{{ aws_lambda_role.iam_role.arn }}"
+      role: lambdamonitoringrole
       handler: 'index.handler'
       vpc_subnet_ids:
       - "{{ localsubnet.subnet.id }}"
