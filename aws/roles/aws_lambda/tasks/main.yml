@@ -108,6 +108,9 @@
         purpose: "{{ bucket }}"
     register: aws_lambda
 
+  - debug:
+      msg: "{{ aws_lambda }}"
+
   - name: Schedule lambda 
     community.aws.cloudwatchevent_rule:
       name: "{{ bucket }}-monitoring-scheduler"
