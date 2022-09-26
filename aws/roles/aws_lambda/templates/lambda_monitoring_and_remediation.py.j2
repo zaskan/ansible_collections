@@ -21,7 +21,7 @@ ssm = boto3.client('ssm', region_name='{{ region }}')
 
 path="/api/v2/job_templates/" + jobid + "/launch/" # AAP API Path
 
-headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '"}'
+headers_data='{"Content-Type": "application/json","Authorization": "Bearer ' + token + '", "extra_vars": "{\"target\": \"' + target + '\"}"}'
 
 def handler(event, context):
     try:
