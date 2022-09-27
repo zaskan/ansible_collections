@@ -75,7 +75,7 @@
       state: absent
 
   - name: Get site information
-    amazon.aws.s3_object:
+    amazon.aws.aws_s3:
       region: "{{ region }}"
       bucket: "{{ bucket }}"
       object: "index.html"
