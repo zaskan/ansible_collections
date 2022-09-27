@@ -148,5 +148,5 @@
       name: "{{ bucket }}-maintenance"
       region: "{{ region }}"
       description: "Parameter to check maintenance for {{ bucket }} service"
-      value: "no"
+      value: "yes"
 
