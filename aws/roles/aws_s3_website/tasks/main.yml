@@ -48,7 +48,7 @@
     register: files
 
   - name: Upload website files
-    amazon.aws.s3_object:
+    amazon.aws.aws_s3:
       region: "{{ region }}"
       bucket: "{{ bucket }}"
       object: "{{ item.path | relpath('tmp') }}"
