@@ -149,4 +149,5 @@
       region: "{{ region }}"
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "yes"
+    register: maintenance_flag
 
