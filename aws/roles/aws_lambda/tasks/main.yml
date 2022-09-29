@@ -150,11 +150,3 @@
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "yes"
     register: maintenance_flag
-
-  - name: Register Lambda into CMDB
-    servicenow.itsm.configuration_item:
-      instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
-      sys_class_name: cmdb_ci_aws_datacenter
-      name: "AWS Lambda website_monitoring"
-      serial_number: "{{ aws_lambda.configuration.function_arn }}"
