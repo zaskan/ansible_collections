@@ -8,6 +8,7 @@ from botocore.exceptions import ClientError
 # Provide a URL to monitor
 
 target = "https://{{ bucket }}.s3.amazonaws.com/index.html"
+target_data = {"extra_vars":{"target": target}}
 
 # Following Env Vars must be created in Lambda config
 
@@ -39,6 +40,7 @@ def lambda_handler(event, context):
           res = urllib.request.urlopen(urllib.request.Request(
             url=hostname + path,
             headers=json.loads(headers_data),
+            data=json.dumps(target_data).encode('utf-8'),
             method='POST'),
             timeout=5,context=ssl.SSLContext())
             
