@@ -11,6 +11,14 @@
       tenancy: default
     register: vpc
 
+  - name: Register VPC into CMDB
+    servicenow.itsm.configuration_item:
+      instance:
+        host: "https://{{ lookup('env','SN_HOST') }}"
+      sys_class_name: cmdb_ci_aws_datacenter
+      name: "{{ bucket }} VPC"
+      object_id: "{{ vpc.vpc.id }}"
+
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
       region: "{{ region }}"
