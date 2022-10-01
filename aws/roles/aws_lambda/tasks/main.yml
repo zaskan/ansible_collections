@@ -1,10 +1,20 @@
-  - name: Set {{ snow_change }} change request state to implement
-    servicenow.itsm.change_request:
-      instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
-      state: implement
-      assignment_group: Ansible
-      number: "{{ snow_change }}"
+  - name: Close {{ snow_incident }} incident
+    servicenow.servicenow.snow_record:
+      state: present
+      number: "{{ snow_incident }}"
+      table: change_request
+      data:
+        state: -1
+        assignment_group: "ansible"
+        number: "{{ snow_change }}"
+
+#  - name: Set {{ snow_change }} change request state to implement
+#    servicenow.itsm.change_request:
+#      instance:
+#        host: "https://{{ lookup('env','SN_HOST') }}"
+#      state: implement
+#      assignment_group: Ansible
+#      number: "{{ snow_change }}"
 
   - name: Check and fail if name already exists
     ansible.builtin.uri:
@@ -176,11 +186,3 @@
       description: "Parameter to check maintenance for {{ bucket }} service"
       value: "yes"
     register: maintenance_flag
-
-  - name: Set {{ snow_change }} change request state to review
-    servicenow.itsm.change_request:
-      instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
-      state: review
-      assignment_group: Ansible
-      number: "{{ snow_change }}"
