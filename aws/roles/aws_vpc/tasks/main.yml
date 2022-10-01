@@ -11,18 +11,16 @@
       tenancy: default
     register: vpc
 
-  - name: Add VPC to CMDB
-    servicenow.itsm.configuration_item:
+  - name: Check if vpc exists in CMDB
+    servicenow.itsm.configuration_item_info:
       instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
+        host: https://dev73939.service-now.com
+        username: admin
+        password: bY*pa8zH$P6P
       sys_class_name: cmdb_ci_aws_datacenter
-      name: "{{ bucket }}_VPC"
-      other:
-        region: "{{ region }}"
-        manufacturer: "AWS_Web_Services"
-        asset_tag: "{{ vpc.vpc.id }}"
-      short_description: "VPC network for {{ bucket }}"
-      state: absent
+      sysparm_query:
+        - asset_tag: = '"{{ vpc.vpc.id }}"'
+    register: vpc_cmdb
 
   - name: Add VPC to CMDB
     servicenow.itsm.configuration_item:
@@ -35,6 +33,7 @@
         manufacturer: "AWS_Web_Services"
         asset_tag: "{{ vpc.vpc.id }}"
       short_description: "VPC network for {{ bucket }}"
+    when: vpc_cmdb.records | length == 0
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
