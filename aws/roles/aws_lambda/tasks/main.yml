@@ -53,6 +53,24 @@
     ansible.builtin.include_role:
       name: zaskan.aws.aws_vpc
 
+  - name: Create bucket
+    amazon.aws.aws_s3:
+      region: "{{ region }}"
+      bucket: "{{ bucket }}"
+      mode: create
+      permission: public-read
+
+  - name: Create policy template
+    ansible.builtin.template:
+      src: policy.j2
+      dest: policy.json
+
+  - name: Upload policy
+    amazon.aws.s3_bucket:
+      name: "{{ bucket }}"
+      region: "{{ region }}"
+      policy: "{{ lookup('file','policy.json') }}"
+
   - name: Create a role and attach a managed policy for lambda
     community.aws.iam_role:
       name: lambdamonitoringrole
