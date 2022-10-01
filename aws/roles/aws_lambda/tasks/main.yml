@@ -184,8 +184,3 @@
       state: review
       assignment_group: Ansible
       number: "{{ snow_change }}"
-
-  - name: Notify when bucket exists
-    ansible.builtin.pause:
-      prompt: "Warning - {{ bucket }} already exists"
-      seconds: 20
