@@ -22,6 +22,19 @@
         manufacturer: "AWS_Web_Services"
         asset_tag: "{{ vpc.vpc.id }}"
       short_description: "VPC network for {{ bucket }}"
+      state: absent
+
+  - name: Add VPC to CMDB
+    servicenow.itsm.configuration_item:
+      instance:
+        host: "https://{{ lookup('env','SN_HOST') }}"
+      sys_class_name: cmdb_ci_aws_datacenter
+      name: "{{ bucket }}_VPC"
+      other:
+        region: "{{ region }}"
+        manufacturer: "AWS_Web_Services"
+        asset_tag: "{{ vpc.vpc.id }}"
+      short_description: "VPC network for {{ bucket }}"
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
