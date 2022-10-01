@@ -62,7 +62,7 @@
 
   - name: Create policy template
     ansible.builtin.template:
-      src: policy.j2
+      src: policy_s3.j2
       dest: policy.json
 
   - name: Upload policy
