@@ -1,3 +1,11 @@
+  - name: Change {{ snow_change }} change request state
+    servicenow.itsm.change_request:
+      instance:
+        host: "https://{{ lookup('env','SN_HOST') }}"
+      state: "Implement"
+      assignment_group: Ansible
+      number: "{{ snow_change }}"
+
   - name: Check and fail if name already exists
     ansible.builtin.uri:
       url: "https://{{ bucket }}.s3.amazonaws.com"
