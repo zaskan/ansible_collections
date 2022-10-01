@@ -17,7 +17,17 @@
         host: "https://{{ lookup('env','SN_HOST') }}"
       sys_class_name: cmdb_ci_aws_datacenter
       name: "{{ bucket }} VPC"
-      asset_tag: "{{ vpc.vpc.id }}"
+      state: absent
+
+  - name: Register VPC into CMDB
+    servicenow.itsm.configuration_item:
+      instance:
+        host: "https://{{ lookup('env','SN_HOST') }}"
+      sys_class_name: cmdb_ci_aws_datacenter
+      name: "{{ bucket }} VPC"
+      short_description: "{{ vpc.vpc.id }}"
+      manufacturer: "Amazon Web Services"
+      location: "{{ region }}"
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
