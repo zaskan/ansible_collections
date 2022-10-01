@@ -22,6 +22,13 @@
         - asset_tag: = '"{{ vpc.vpc.id }}"'
     register: vpc_cmdb
 
+  - name: Check if item exists
+    servicenow.servicenow.snow_record_find:
+      table: cmdb_ci_aws_datacenter
+      query:
+        asset_tag: ""{{ vpc.vpc.id }}""
+    register: vpc_cmdb
+
   - name: Add VPC to CMDB
     servicenow.itsm.configuration_item:
       instance:
