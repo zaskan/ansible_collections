@@ -20,7 +20,7 @@
         - name: = "{{ bucket }} VPC"
     register: result
 
-  - debug: msg:"{{ result }}"
+  - debug: msg="{{ result }}"
 
   - name: Register VPC into CMDB
     servicenow.itsm.configuration_item:
