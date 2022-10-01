@@ -11,23 +11,23 @@
       tenancy: default
     register: vpc
 
-  - name: Check if item exists
-    servicenow.servicenow.snow_record_find:
-      table: cmdb_ci_aws_datacenter
-      query:
-        asset_tag: "{{ vpc.vpc.id }}"
-    register: vpc_state
-
-  - name: Check if item exists
-    servicenow.servicenow.snow_record:
-      table: cmdb_ci_aws_datacenter
-      state: present
-      data:
-        name: "{{ bucket }}-vpc"
-        region: eu-west-1
-        short_description: "VPC network for {{ bucket }}"
-        asset_tag: "{{ vpc.vpc.id }}"
-    when: vpc_state.record | length == 0
+#  - name: Check if item exists
+#    servicenow.servicenow.snow_record_find:
+#      table: cmdb_ci_aws_datacenter
+#      query:
+#        asset_tag: "{{ vpc.vpc.id }}"
+#    register: vpc_state
+#
+#  - name: Check if item exists
+#    servicenow.servicenow.snow_record:
+#      table: cmdb_ci_aws_datacenter
+#      state: present
+#      data:
+#        name: "{{ bucket }}-vpc"
+#        region: eu-west-1
+#        short_description: "VPC network for {{ bucket }}"
+#        asset_tag: "{{ vpc.vpc.id }}"
+#    when: vpc_state.record | length == 0
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
