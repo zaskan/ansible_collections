@@ -29,8 +29,6 @@
       sys_class_name: cmdb_ci_aws_datacenter
       name: "{{ bucket }} VPC"
       short_description: "{{ vpc.vpc.id }}"
-      manufacturer: "Amazon Web Services"
-      location: "{{ region }}"
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
