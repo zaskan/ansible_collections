@@ -11,24 +11,17 @@
       tenancy: default
     register: vpc
 
-  - name: Retrieve a specific configuration item by name
-    servicenow.itsm.configuration_item_info:
-      instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
-      sys_class_name: cmdb_ci_aws_datacenter
-      query:
-        - name: is "{{ bucket }} VPC"
-    register: result
-
-  - debug: msg="{{ result }}"
-
-  - name: Register VPC into CMDB
+  - name: Add VPC to CMDB
     servicenow.itsm.configuration_item:
       instance:
         host: "https://{{ lookup('env','SN_HOST') }}"
       sys_class_name: cmdb_ci_aws_datacenter
-      name: "{{ bucket }} VPC"
-      short_description: "{{ vpc.vpc.id }}"
+      name: "{{ bucket }}_VPC }}"
+      other:
+        region: "{{ region }}"
+        manufacturer: "AWS Web Services"
+        asset_tag: "{{ vpc.vpc.id }}"
+      short_description: "VPC network for {{ bucket }}"
 
   - name: Create local subnet
     amazon.aws.ec2_vpc_subnet:
