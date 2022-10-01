@@ -17,7 +17,7 @@
         host: "https://{{ lookup('env','SN_HOST') }}"
       sys_class_name: cmdb_ci_aws_datacenter
       query:
-        - name: = "{{ bucket }} VPC"
+        - name: is "{{ bucket }} VPC"
     register: result
 
   - debug: msg="{{ result }}"
