@@ -11,13 +11,12 @@
       tenancy: default
     register: vpc
 
-  - name: Register VPC into CMDB
-    servicenow.itsm.configuration_item:
-      instance:
-        host: "https://{{ lookup('env','SN_HOST') }}"
-      sys_class_name: cmdb_ci_aws_datacenter
+  - name: Retrieve a specific configuration item by name
+    servicenow.itsm.configuration_item_info:
       name: "{{ bucket }} VPC"
-      state: absent
+    register: result
+
+  - debug: msg:"{{ result }}"
 
   - name: Register VPC into CMDB
     servicenow.itsm.configuration_item:
