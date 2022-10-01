@@ -1,7 +1,6 @@
   - name: Close {{ snow_incident }} incident
     servicenow.servicenow.snow_record:
       state: present
-      number: "{{ snow_incident }}"
       table: change_request
       data:
         state: -1
