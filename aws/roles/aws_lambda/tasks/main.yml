@@ -1,20 +1,3 @@
-  - name: Close {{ snow_incident }} incident
-    servicenow.servicenow.snow_record:
-      state: present
-      table: change_request
-      data:
-        state: -1
-        assignment_group: "ansible"
-        number: "{{ snow_change }}"
-
-#  - name: Set {{ snow_change }} change request state to implement
-#    servicenow.itsm.change_request:
-#      instance:
-#        host: "https://{{ lookup('env','SN_HOST') }}"
-#      state: implement
-#      assignment_group: Ansible
-#      number: "{{ snow_change }}"
-
   - name: Check and fail if name already exists
     ansible.builtin.uri:
       url: "https://{{ bucket }}.s3.amazonaws.com"
