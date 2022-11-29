@@ -120,29 +120,29 @@
     community.aws.iam_role_info:
       name: eventmonitoringrole
 
-#  - name: Create lambda
-#    community.aws.lambda:
-#      name: website_monitoring
-#      state: present
-#      region: "{{ region }}"
-#      zip_file: ./website_monitoring.zip
-#      runtime: 'python3.8'
-#      role: "{{ aws_lambda_role.iam_role.arn }}"
-#      handler: 'index.handler'
-#      vpc_subnet_ids:
-#      - "{{ localsubnet.subnet.id }}"
-#      - "{{ publicsubnet.subnet.id }}"
-#      vpc_security_group_ids:
-#      - "{{ sg.group_id }}"
-#      environment_variables:
-#        aaptoken: "{{ controller_token.token }}"
-#        hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
-#        job_id: "{{ jobid | string }}"
-#      timeout: 15
-#      memory_size: 512
-#      tags:
-#        purpose: "{{ bucket }}"
-#    register: aws_lambda
+  - name: Create lambda
+    community.aws.lambda:
+      name: website_monitoring
+      state: present
+      region: "{{ region }}"
+      zip_file: ./website_monitoring.zip
+      runtime: 'python3.8'
+      role: "{{ aws_lambda_role.iam_role.arn }}"
+      handler: 'index.handler'
+      vpc_subnet_ids:
+      - "{{ localsubnet.subnet.id }}"
+      - "{{ publicsubnet.subnet.id }}"
+      vpc_security_group_ids:
+      - "{{ sg.group_id }}"
+      environment_variables:
+        aaptoken: "{{ controller_token.token }}"
+        hostname: "{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}"
+        job_id: "{{ jobid | string }}"
+      timeout: 15
+      memory_size: 512
+      tags:
+        purpose: "{{ bucket }}"
+    register: aws_lambda
 
   - name: Schedule lambda 
     community.aws.cloudwatchevent_rule:
