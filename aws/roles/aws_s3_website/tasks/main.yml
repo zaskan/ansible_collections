@@ -74,14 +74,6 @@
       path: tmp
       state: absent
 
-  - name: Get site information
-    amazon.aws.aws_s3:
-      region: "{{ region }}"
-      bucket: "{{ bucket }}"
-      object: "index.html"
-      mode: geturl 
-    register: url
-
   - name: Show site URL
     debug:
       msg: "http://{{ bucket }}.s3-website-{{ region }}.amazonaws.com/index.html"
