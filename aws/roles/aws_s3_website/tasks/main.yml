@@ -84,7 +84,7 @@
 
   - name: Show site URL
     debug:
-      msg: "{{ url.url | urlsplit('scheme') }}://{{ url.url | urlsplit('hostname') }}{{ url.url | urlsplit('path') }}"
+      msg: "http://{{ bucket }}.s3-website-{{ region }}.amazonaws.com/index.html"
     register: target_url
 
   - name: Store URL
